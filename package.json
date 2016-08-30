@@ -1,0 +1,19 @@
+{
+  "name": "git-gui",
+  "main": "./lib/git-gui",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "git-gui:toggle"
+  },
+  "repository": "https://github.com/atom/git-gui",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "nodegit": "^0.15"
+  }
+}
