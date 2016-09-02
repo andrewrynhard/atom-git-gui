@@ -14,6 +14,8 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
-    "nodegit": "^0.15"
+    "nodegit": "^0.15",
+    "openpgp": "^2.3",
+    "atom-space-pen-views": "^2.2"
   }
 }
