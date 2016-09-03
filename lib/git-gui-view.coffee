@@ -17,6 +17,7 @@ module.exports =
       @modalPanel = atom.workspace.addModalPanel
         item: @gitGuiActionView,
         visible: true
+      @gitGuiActionView.parentView = this
 
     serialize: ->
 
