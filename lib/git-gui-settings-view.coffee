@@ -1,5 +1,3 @@
-path = require 'path'
-fs = require 'fs'
 {$, View} = require 'space-pen'
 GitGuiMenuView = require './git-gui-settings-menu-view'
 GitConfigView = require './git-config-view'
@@ -15,11 +13,11 @@ module.exports =
           @subview 'gitConfig', new GitConfigView()
 
     initialize: ->
-      $(document).ready () =>
-        $('body').on 'click', '#settings-header', () =>
-          $('#status-list').toggleClass('blur')
+      $(document).ready () ->
+        $('body').on 'click', '#settings-header', () ->
           $('#settings').toggleClass('open')
-          $('.git-gui-menu-ul li.selected').removeClass('selected');
-          $('.git-gui-subview.active').removeClass('active');
+          $('#status-list').toggleClass('fade-and-blur')
+          $('.git-gui-settings-menu-list li.selected').removeClass('selected')
+          $('.git-gui-settings-subview.active').removeClass('active')
 
     destroy: ->

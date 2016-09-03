@@ -5,249 +5,248 @@
 @import "ui-variables";
 
 atom-workspace-axis.horizontal.blur {
-  -webkit-filter: blur(5px);
-  transition: 0.22s ease;
-  pointer-events : none;
+    -webkit-filter: blur(5px);
+    transition: 0.22s ease;
+    pointer-events: none;
 }
 
 atom-workspace-axis.horizontal {
-  -webkit-filter: blur(0px);
-  transition: 0.22s ease;
+    -webkit-filter: blur(0px);
+    transition: 0.22s ease;
 }
 
 .git-gui {
-  display: flex;
-  flex-flow: column;
-  -webkit-transition: width 0.22s ease;
-  width: 0;
-  overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    -webkit-transition: width 0.22s ease;
+    width: 0;
+    overflow: hidden;
 }
 
 .git-gui.open {
-  -webkit-transition: width 0.22s ease;
-  width: 500px;
+    -webkit-transition: width 0.22s ease;
+    width: 500px;
 }
 
-.git-gui-action-bar-menu {
-  display: inline-flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 50px;
+.git-gui-action-bar-list {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 50px;
 }
 
 .git-gui-action-bar .icon::before {
-  position: relative;
-  left: 7px;
-  font-size: 28px;
-}
-
-#action-view {
-  -webkit-transition: height 0.22s ease;
-  height: 0;
-  overflow: hidden;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-
-#action-view.open {
-  -webkit-transition: height 0.22s ease;
-  height: 500px;
-}
-
-.status-view {
-  width: 100%;
-  height: 100%;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-
-.git-gui-settings {
-  display: block;
-  width: 100%;
-  -webkit-transition: height 0.22s ease;
-  height: 50px;
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  overflow: hidden;
-}
-
-.git-gui-settings.open {
-  -webkit-transition: height 0.22s ease;
-  height: 325px;
-}
-
-.git-gui-settings-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 50px;
-  font-size: 21px;
-  cursor: pointer;
-  font-size: 28px;
-}
-
-.git-gui-settings-content {
-  display: flex;
-  flex-flow: row;
-}
-
-.git-gui-settings-menu {
-  overflow-y: auto;
-  width: 25%;
-  height: 100%;
-  padding-left: 7px;
-}
-
-
-.git-gui-subview {
-  display: none;
-  width: 75%;
-  height: 100%;
-  padding-left: 7px;
-}
-
-.git-gui-subview.active {
-  display: inline-block
-}
-
-.git-gui-menu-ul {
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
-  overflow-y: auto;
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  height: 100%;
-}
-
-.git-gui-menu-ul li {
-  width: 100%;
-  height: 50px;
-}
-
-.git-gui-menu-ul li a {
-  display: block;
-  font-size: 14px;
-  line-height:50px
-}
-
-.git-gui-settings-menu .icon::before {
-  position: relative;
-  left: 7px;
-  font-size: 21px;
+    position: relative;
+    left: 7px;
+    font-size: 28px;
 }
 
 .git-gui-action-bar {
-  .git-gui-menu-ul {
+    .git-gui-settings-menu-ul {
+        overflow: hidden;
+    }
+}
+
+#action-view {
+    -webkit-transition: height 0.22s ease;
+    height: 0;
     overflow: hidden;
-  }
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+#action-view.open {
+    -webkit-transition: height 0.22s ease;
+    height: 500px;
+}
+
+.status-view {
+    width: 100%;
+    height: 100%;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+.git-gui-settings {
+    display: block;
+    width: 100%;
+    -webkit-transition: height 0.22s ease;
+    height: 50px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.git-gui-settings.open {
+    -webkit-transition: height 0.22s ease;
+    height: 325px;
+}
+
+.git-gui-settings-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    font-size: 21px;
+    cursor: pointer;
+    font-size: 28px;
+}
+
+.git-gui-settings-content {
+    display: flex;
+    flex-flow: row;
+}
+
+.git-gui-settings-menu {
+    overflow-y: auto;
+    width: 25%;
+    height: 100%;
+    padding-left: 7px;
+}
+
+.git-gui-settings-subview {
+    display: none;
+    width: 75%;
+    height: 100%;
+    padding-left: 7px;
+}
+
+.git-gui-settings-subview.active {
+    display: inline-block;
+}
+
+.git-gui-settings-menu-list {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.git-gui-settings-menu-ul li {
+    width: 100%;
+    height: 50px;
+}
+
+.git-gui-settings-menu-ul li a {
+    display: block;
+    font-size: 14px;
+    line-height: 50px;
+}
+
+.git-gui-settings-menu .icon::before {
+    position: relative;
+    left: 7px;
+    font-size: 21px;
 }
 
 #status-list {
-  height: 100%;
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 1;
-  -webkit-filter: blur(0px);
-  transition: 0.22s;
+    height: 100%;
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 1;
+    -webkit-filter: blur(0px);
+    transition: 0.22s;
 }
 
-#status-list.blur {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 0.2;
-  -webkit-filter: blur(2px);
-  transition: 0.22s;
+#status-list.fade-and-blur {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 0.2;
+    -webkit-filter: blur(2px);
+    transition: 0.22s;
 }
 
 #userSigningKey {
-  width: 100%;
+    width: 100%;
 }
 // TODO: Extract the common code for the following, and make it a class
 
+#commit-action.available {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+#commit-action {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+#commit-action::before {
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f01f";
+}
+
+#branch-action::before {
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f020";
+}
+
+#push-action.available {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+#push-action {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+#push-action::before {
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f005";
+}
+
+#push-action.force::before {
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f04a";
+}
+
+#pull-action.available {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+#pull-action {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+#pull-action::before {
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f006";
+}
+
 #user::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f018";
-}
-
-#commit.available {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 1;
-  pointer-events: inherit;
-}
-
-#commit {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 0.25;
-  pointer-events : none;
-}
-
-#commit::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f01f";
-}
-
-#branch::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f020";
-}
-
-#push.available {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 1;
-  pointer-events: inherit;
-}
-
-#push {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 0.25;
-  pointer-events : none;
-}
-
-#push::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f005";
-}
-
-#pull.available {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 1;
-  pointer-events: inherit;
-}
-
-#pull {
-  -webkit-transition: opacity 0.22s ease;
-  opacity: 0.25;
-  pointer-events : none;
-}
-
-#pull::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f006";
-}
-
-#push.force::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f04a";
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f018";
 }
 
 #repo::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f001";
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f001";
 }
 
 #config::before {
-  font-family: "Octicons Regular";
-  padding-right: 14%;
-  content: "\f011";
+    font-family: "Octicons Regular";
+    padding-right: 14%;
+    content: "\f011";
 }

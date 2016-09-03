@@ -1,25 +1,28 @@
 GitGuiView = require './git-gui-view'
-{CompositeDisposable, GitRepository} = require 'atom'
+{CompositeDisposable} = require 'atom'
 {$} = require 'space-pen'
 
-module.exports = GitGui =
+module.exports =
   gitGuiView: null
   modalPanel: null
   subscriptions: null
 
+  # TODO: Update the watched repo when the active atom project changes.
   activate: (state) ->
     @gitGuiView = new GitGuiView(state.gitGuiViewState)
     @modalPanel = atom.workspace.addRightPanel(item: @gitGuiView, visible: true)
 
-    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+    # Events subscribed to in atom's system can be easily cleaned up with a
+    # CompositeDisposable
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'git-gui:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-gui:toggle': =>
+      @toggle()
 
     repo = atom.project.getRepositories()[0]
 
-    @subscriptions.add repo.onDidChangeStatus (event) =>
+    @subscriptions.add repo.onDidChangeStatus () =>
       @gitGuiView.setStatuses()
 
     @subscriptions.add repo.onDidChangeStatuses () =>
@@ -34,8 +37,6 @@ module.exports = GitGui =
     gitGuiViewState: @gitGuiView.serialize()
 
   toggle: ->
-    @gitGuiView.setStatuses()
     $(document).ready () =>
-      $('#container').toggleClass 'open'
-      $('.git-gui-menu-ul li.selected').removeClass 'selected'
-      $('.git-gui-subview.active').removeClass 'active'
+      $('.git-gui').toggleClass 'open'
+      @gitGuiView.setStatuses()

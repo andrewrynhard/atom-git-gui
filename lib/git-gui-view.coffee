@@ -1,26 +1,30 @@
-path = require 'path'
-{$, View} = require 'space-pen'
-Git = require 'nodegit'
+{View} = require 'space-pen'
 GitGuiActionBarView = require './git-gui-action-bar-view'
+GitGuiActionView = require './git-gui-action-view'
 GitGuiStatusView = require './git-gui-status-view'
 GitGuiSettingsView = require './git-gui-settings-view'
 
 module.exports =
   class GitGuiView extends View
     @content: ->
-      @div class: 'git-gui', id: 'container', =>
-        @subview 'gitGuiActionBar', new GitGuiActionBarView()
-        @subview 'gitGuiStatus', new GitGuiStatusView()
-        @subview 'gitGuiSettingsMenu', new GitGuiSettingsView()
+      @div class: 'git-gui', =>
+        @subview 'gitGuiActionBarView', new GitGuiActionBarView()
+        @subview 'gitGuiStatusView', new GitGuiStatusView()
+        @subview 'gitGuiSettingsView', new GitGuiSettingsView()
 
     initialize: ->
+      @gitGuiActionView = new GitGuiActionView()
+      @modalPanel = atom.workspace.addModalPanel
+        item: @gitGuiActionView,
+        visible: true
 
     serialize: ->
 
     destroy: ->
-      @gitGuiActionBar.destroy()
-      @gitGuiStatus.destroy()
-      @gitGuiSettingsMenu.destroy()
+      @gitGuiActionBarView.destroy()
+      @gitGuiActionView.destroy()
+      @gitGuiStatusView.destroy()
+      @gitGuiSettingsView.destroy()
 
     setStatuses: ->
-      @gitGuiStatus.setStatuses()
+      @gitGuiStatusView.setStatuses()

@@ -1,13 +1,11 @@
-path = require 'path'
-fs = require 'fs'
 {$, View} = require 'space-pen'
-GitConfigView = require './git-config-view'
 
+# TODO: Improve setting the active menu item.
 module.exports =
   class GitGuiSettingsMenuView extends View
     @content: ->
       @div class: 'git-gui-settings-menu', =>
-        @ul class: 'list-group git-gui-menu-ul', =>
+        @ul class: 'list-group git-gui-menu-list', =>
           @li class: 'list-item', click: 'setActiveMenuItem', =>
             @a class: 'icon', id: 'repo', 'Repo'
           @li class: 'list-item', click: 'setActiveMenuItem', =>
@@ -18,8 +16,8 @@ module.exports =
     destroy: ->
 
     setActiveMenuItem: (event, element) ->
-      $('.git-gui-menu-ul li.selected').removeClass('selected');
-      $('.git-gui-subview.active').removeClass('active');
+      $('.git-gui-menu-list li.selected').removeClass('selected')
+      $('.git-gui-settings-subview.active').removeClass('active')
       $(element).addClass 'selected'
       selectedItem = element.children(":first").attr("id")
       switch selectedItem

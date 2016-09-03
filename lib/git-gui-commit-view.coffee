@@ -21,18 +21,18 @@ module.exports =
         message = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
         pathToRepo = path.join atom.project.getPaths()[0], '.git'
         Git.Repository.open pathToRepo
-        .then (repo) =>
+        .then (repo) ->
           repo.refreshIndex()
-          .then (index) =>
+          .then (index) ->
             index.writeTree()
-            .then (oid) =>
+            .then (oid) ->
               Git.Reference.nameToId repo, "HEAD"
-              .then (head) =>
+              .then (head) ->
                 repo.getCommit head
-                .then (parent) =>
+                .then (parent) ->
                   signature = Git.Signature.default repo
                   repo.createCommit "HEAD", signature, signature, message, oid, [parent]
-                  .then (commitId) =>
+                  .then (commitId) ->
                     console.log commitId
         .catch (error) ->
           console.log error

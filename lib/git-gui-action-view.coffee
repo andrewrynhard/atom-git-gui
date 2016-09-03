@@ -8,12 +8,12 @@ class GitGuiActionView extends View
       @subview 'commitView', new GitGuiCommitView()
       @div class: 'btn-toolbar', =>
         @div class: 'btn-group', =>
-          @button class: 'btn', id: 'action-close', 'Close'
-          @button class: 'btn', id: 'action-button'
+          @button class: 'btn', id: 'action-view-close-button', 'Close'
+          @button class: 'btn', id: 'action-view-action-button'
 
   initialize: ->
-    $(document).ready () =>
-      $('body').on 'click', '#action-close', () =>
+    $(document).ready () ->
+      $('body').on 'click', '#action-view-close-button', () ->
         $('atom-workspace-axis.horizontal').toggleClass 'blur'
         $('#action-view').removeClass 'open'
 
@@ -22,8 +22,8 @@ class GitGuiActionView extends View
   destroy: ->
 
   openCommitAction: ->
-    $('#action-button').text 'Commit'
-    $('#action-button').off 'click'
-    $('#action-button').on 'click', () =>
+    $('#action-view-action-button').text 'Commit'
+    $('#action-view-action-button').off 'click'
+    $('#action-view-action-button').on 'click', () =>
       @commitView.commit()
-      $('#action-close').click()
+      $('#action-view-close-button').click()
