@@ -5,7 +5,7 @@ Git = require 'nodegit'
 module.exports =
   class GitGuiStatusView extends View
     @content: ->
-      @div class: 'status-view', =>
+      @div class: 'git-gui-staging-area', =>
         @ol class: 'list-group', id: 'status-list'
 
     initialize: ->

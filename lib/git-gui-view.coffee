@@ -1,7 +1,7 @@
 {View} = require 'space-pen'
 GitGuiActionBarView = require './git-gui-action-bar-view'
 GitGuiActionView = require './git-gui-action-view'
-GitGuiStatusView = require './git-gui-status-view'
+GitGuiStatusView = require './git-gui-staging-area'
 GitGuiSettingsView = require './git-gui-settings-view'
 
 module.exports =
