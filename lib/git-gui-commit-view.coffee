@@ -17,8 +17,8 @@ module.exports =
     destroy: ->
 
     commit: ->
-      $(document).ready =>
-        message = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
+      message = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
+      $(document).ready ->
         pathToRepo = path.join atom.project.getPaths()[0], '.git'
         Git.Repository.open pathToRepo
         .then (repo) ->
@@ -26,13 +26,16 @@ module.exports =
           .then (index) ->
             index.writeTree()
             .then (oid) ->
-              Git.Reference.nameToId repo, "HEAD"
+              Git.Reference.nameToId repo, 'HEAD'
               .then (head) ->
                 repo.getCommit head
                 .then (parent) ->
                   signature = Git.Signature.default repo
-                  repo.createCommit "HEAD", signature, signature, message, oid, [parent]
-                  .then (commitId) ->
-                    console.log commitId
+                  repo.createCommit 'HEAD', signature, signature, message, oid, [parent]
+                  atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
+                  # .then (oid) ->
+                  #   Git.Commit.createWithSignature repo, message, signature.toString(), "NULL"
+                  #   .then (oid) ->
+                  #     atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
         .catch (error) ->
           console.log error
