@@ -28,22 +28,6 @@ atom-workspace-axis.horizontal {
   width: 500px;
 }
 
-#action-view.open {
-  display: block;
-  -webkit-transition: opacity: 0.22s ease;
-  opacity: 1;
-}
-
-#action-view {
-  height: 500px;
-  display: none;
-  -webkit-transition: opacity: 0.22s ease;
-  opacity: 0;
-  overflow: hidden;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-
 .git-gui-action-bar-menu {
   display: inline-flex;
   flex-direction: row;
@@ -57,6 +41,19 @@ atom-workspace-axis.horizontal {
   position: relative;
   left: 7px;
   font-size: 28px;
+}
+
+#action-view {
+  -webkit-transition: height 0.22s ease;
+  height: 0;
+  overflow: hidden;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+#action-view.open {
+  -webkit-transition: height 0.22s ease;
+  height: 500px;
 }
 
 .status-view {
@@ -162,8 +159,8 @@ atom-workspace-axis.horizontal {
 #status-list.blur {
   -webkit-transition: opacity 0.22s ease;
   opacity: 0.25;
-  -webkit-filter: blur(5px);
-  transition: 0.22s;
+  // -webkit-filter: blur(5px);
+  // transition: 0.22s;
 }
 
 #userSigningKey {
@@ -178,11 +175,15 @@ atom-workspace-axis.horizontal {
 }
 
 #commit.available {
-  display: block;
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 1;
+  pointer-events: inherit;
 }
 
 #commit {
-  display: none;
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 0.25;
+  pointer-events : none;
 }
 
 #commit::before {
