@@ -198,10 +198,34 @@ atom-workspace-axis.horizontal {
   content: "\f020";
 }
 
+#push.available {
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 1;
+  pointer-events: inherit;
+}
+
+#push {
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 0.25;
+  pointer-events : none;
+}
+
 #push::before {
   font-family: "Octicons Regular";
   padding-right: 14%;
   content: "\f005";
+}
+
+#pull.available {
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 1;
+  pointer-events: inherit;
+}
+
+#pull {
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 0.25;
+  pointer-events : none;
 }
 
 #pull::before {
