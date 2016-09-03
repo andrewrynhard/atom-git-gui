@@ -27,3 +27,4 @@ class GitGuiActionView extends View
     $('#action-view-action-button').on 'click', () =>
       @commitView.commit()
       $('#action-view-close-button').click()
+      @parentView.gitGuiStatusView.setStatuses()
