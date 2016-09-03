@@ -1,7 +1,6 @@
 path = require 'path'
 {$, View} = require 'space-pen'
 GitGuiActionView = require './git-gui-action-view'
-Git = require 'nodegit'
 
 module.exports =
   class GitGuiActionBarView extends View
@@ -49,11 +48,7 @@ module.exports =
         $('body').on 'click', '#commit', (e) =>
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
           $('#action-view').addClass 'open'
-          $('#action-button').text 'Commit'
-          $('#action-button').off 'click'
-          $('#action-button').on 'click', () =>
-            @commit()
-            $('#action-close').click()
+          @actionView.openCommitAction()
 
         $('body').on 'click', '#push', (e) =>
           console.log 'push'
@@ -67,23 +62,3 @@ module.exports =
     serialize: ->
 
     destroy: ->
-
-    commit: ->
-      # message = $()
-      pathToRepo = path.join atom.project.getPaths()[0], '.git'
-      Git.Repository.open pathToRepo
-      .then (repo) =>
-        repo.refreshIndex()
-        .then (index) =>
-          index.writeTree()
-          .then (oid) =>
-            Git.Reference.nameToId repo, "HEAD"
-            .then (head) =>
-              repo.getCommit head
-              .then (parent) =>
-                signature = Git.Signature.default repo
-                repo.createCommit "HEAD", signature, signature, "message", oid, [parent]
-                .then (commitId) =>
-                  console.log commitId
-      .catch (error) ->
-        console.log error

@@ -20,3 +20,10 @@ class GitGuiActionView extends View
   serialize: ->
 
   destroy: ->
+
+  openCommitAction: ->
+    $('#action-button').text 'Commit'
+    $('#action-button').off 'click'
+    $('#action-button').on 'click', () =>
+      @commitView.commit()
+      $('#action-close').click()
