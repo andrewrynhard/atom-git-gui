@@ -58,8 +58,6 @@ module.exports =
             li.append div
             li.append span
             li.append a
-            console.log file
-            console.log file.status()
             if file.inIndex()
               $('#commit-action').addClass 'available'
               span.addClass 'icon-check'
