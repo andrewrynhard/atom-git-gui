@@ -5,7 +5,7 @@ module.exports =
   class GitGuiSettingsMenuView extends View
     @content: ->
       @div class: 'git-gui-settings-menu', =>
-        @ul class: 'list-group git-gui-menu-list', =>
+        @ul class: 'list-group git-gui-settings-menu-list', =>
           @li class: 'list-item', click: 'setActiveMenuItem', =>
             @a class: 'icon', id: 'repo', 'Repo'
           @li class: 'list-item', click: 'setActiveMenuItem', =>
@@ -16,7 +16,7 @@ module.exports =
     destroy: ->
 
     setActiveMenuItem: (event, element) ->
-      $('.git-gui-menu-list li.selected').removeClass('selected')
+      $('.git-gui-settings-menu-list li.selected').removeClass('selected')
       $('.git-gui-settings-subview.active').removeClass('active')
       $(element).addClass 'selected'
       selectedItem = element.children(":first").attr("id")
