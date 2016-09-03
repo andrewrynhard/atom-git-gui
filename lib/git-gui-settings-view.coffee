@@ -7,7 +7,7 @@ module.exports =
     @content: ->
       @div class: 'git-gui-settings closed', id: 'settings', =>
         @div class: 'git-gui-settings-header', id: 'settings-header', =>
-          @span class: 'icon icon-settings', "Settings"
+          @span "Settings"
         @div class: 'git-gui-settings-content', =>
           @subview 'gitGuiSettingsMenu', new GitGuiMenuView()
           @subview 'gitConfig', new GitConfigView()
