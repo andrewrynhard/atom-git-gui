@@ -17,13 +17,9 @@ module.exports =
     initialize: ->
       $(document).ready () =>
         $('body').on 'click', '#settings-header', () =>
-          if $('#settings').hasClass('open')
-            $('#settings').removeClass 'open'
-            $('#settings').addClass 'closed'
-            $('.git-gui-menu-ul li.selected').removeClass('selected');
-            $('.git-gui-subview.active').removeClass('active');
-          else
-            $('#settings').removeClass 'closed'
-            $('#settings').addClass 'open'
+          $('#status-list').toggleClass('blur')
+          $('#settings').toggleClass('open')
+          $('.git-gui-menu-ul li.selected').removeClass('selected');
+          $('.git-gui-subview.active').removeClass('active');
 
     destroy: ->

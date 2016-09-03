@@ -20,11 +20,9 @@ module.exports = GitGui =
     repo = atom.project.getRepositories()[0]
 
     @subscriptions.add repo.onDidChangeStatus (event) =>
-      console.log 'changed status'
       @gitGuiView.setStatuses()
 
     @subscriptions.add repo.onDidChangeStatuses () =>
-      console.log 'changed statuses'
       @gitGuiView.setStatuses()
 
   deactivate: ->
@@ -38,11 +36,6 @@ module.exports = GitGui =
   toggle: ->
     @gitGuiView.setStatuses()
     $(document).ready () =>
-      if $('#container').hasClass('open')
-        $('#container').removeClass 'open'
-        $('#container').addClass 'closed'
-        $('.git-gui-menu-ul li.selected').removeClass('selected');
-        $('.git-gui-subview.active').removeClass('active');
-      else
-        $('#container').removeClass 'closed'
-        $('#container').addClass 'open'
+      $('#container').toggleClass 'open'
+      $('.git-gui-menu-ul li.selected').removeClass 'selected'
+      $('.git-gui-subview.active').removeClass 'active'

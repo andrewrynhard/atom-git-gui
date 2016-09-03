@@ -135,14 +135,9 @@ module.exports =
         .then (config) =>
           # Set the user signingkey
           config.setString 'user.signingkey', $('#userSigningKey').val()
-          .then (result) =>
-            if result != 0
-              console.log 'Error setting user.signingkey'
+          .then () =>
             # Ensure that commits are signed
             config.setString 'commit.gpgsign', 'true'
-            .then (result) =>
-              if result != 0
-                console.log 'Error setting commit.gpgsign'
 
       .catch (error) ->
         console.log error

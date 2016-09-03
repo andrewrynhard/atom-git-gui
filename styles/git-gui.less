@@ -4,48 +4,82 @@
 // for a full listing of what's available.
 @import "ui-variables";
 
+atom-workspace-axis.horizontal.blur {
+  -webkit-filter: blur(5px);
+  transition: 0.22s ease;
+  pointer-events : none;
+}
+
+atom-workspace-axis.horizontal {
+  -webkit-filter: blur(0px);
+  transition: 0.22s ease;
+}
+
 .git-gui {
   display: flex;
+  flex-flow: column;
+  -webkit-transition: width 0.22s ease;
+  width: 0;
+  overflow: hidden;
 }
 
 .git-gui.open {
-  -webkit-transition: all 0.25s ease;
+  -webkit-transition: width 0.22s ease;
   width: 500px;
 }
 
-.git-gui.closed {
-  -webkit-transition: all 0.25s ease;
-  width: 0px;
+#action-view.open {
+  display: block;
+  -webkit-transition: opacity: 0.22s ease;
+  opacity: 1;
 }
 
-.git-gui-status {
-  display: flex;
-  flex-flow: column;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  // justify-content: space-around;
+#action-view {
+  height: 500px;
+  display: none;
+  -webkit-transition: opacity: 0.22s ease;
+  opacity: 0;
+  overflow: hidden;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.git-gui-action-bar-menu {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: space-around;
   align-items: center;
-  width: 50px;
-  height: 200%;
+  width: 100%;
+  height: 50px;
+}
+
+.git-gui-action-bar .icon::before {
+  position: relative;
+  left: 7px;
+  font-size: 28px;
+}
+
+.status-view {
+  width: 100%;
+  height: 100%;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 .git-gui-settings {
   display: block;
   width: 100%;
+  -webkit-transition: height 0.22s ease;
+  height: 50px;
   position: absolute;
   left: 0px;
   bottom: 0px;
+  overflow: hidden;
 }
 
 .git-gui-settings.open {
-  -webkit-transition: all 0.25s ease;
-  height: 300px;
-}
-
-.git-gui-settings.closed {
-  -webkit-transition: all 0.25s ease;
-  height: 50px;
+  -webkit-transition: height 0.22s ease;
+  height: 325px;
 }
 
 .git-gui-settings-header {
@@ -56,6 +90,7 @@
   height: 50px;
   font-size: 21px;
   cursor: pointer;
+  font-size: 28px;
 }
 
 .git-gui-settings-content {
@@ -108,6 +143,27 @@
   position: relative;
   left: 7px;
   font-size: 21px;
+}
+
+.git-gui-action-bar {
+  .git-gui-menu-ul {
+    overflow: hidden;
+  }
+}
+
+#status-list {
+  height: 100%;
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 1;
+  -webkit-filter: blur(0px);
+  transition: 0.22s;
+}
+
+#status-list.blur {
+  -webkit-transition: opacity 0.22s ease;
+  opacity: 0.25;
+  -webkit-filter: blur(5px);
+  transition: 0.22s;
 }
 
 #userSigningKey {
