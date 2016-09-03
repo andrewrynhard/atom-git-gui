@@ -25,11 +25,13 @@ module.exports =
                     Git.Reset.default repo, commit, fileName
                   .then () =>
                     index.write()
+                    @setStatuses()
                 else
                   $(e.target).addClass 'icon icon-check'
                   index.addByPath fileName
                   .then () =>
                     index.write()
+                    @setStatuses()
           .catch (error) ->
             console.log error
 
@@ -39,6 +41,8 @@ module.exports =
 
     setStatuses: ->
       $('#status-list').empty()
+      $('#commit').removeClass 'available'
+
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) =>
@@ -47,6 +51,8 @@ module.exports =
           for file in statuses
             a = ''
             if file.inIndex()
+              # if !$('#commit').hasClass 'available'
+              $('#commit').addClass 'available'
               a = "<a class='icon icon-check' id='unstaged-file' data-file='#{file.path()}'>#{file.path()}</a>"
             else
               a = "<a id='unstaged-file' data-file='#{file.path()}'>#{file.path()}</a>"
