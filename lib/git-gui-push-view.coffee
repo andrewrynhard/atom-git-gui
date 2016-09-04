@@ -18,7 +18,6 @@ module.exports =
 
     initialize: ->
       $(document).ready () ->
-        $(@userPassword).attr 'id', 'user-password'
         pathToRepo = path.join atom.project.getPaths()[0], '.git'
         Git.Repository.open pathToRepo
         .then (repo) ->
