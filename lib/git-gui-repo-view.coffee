@@ -47,7 +47,7 @@ module.exports =
           repo.checkoutBranch ref, checkoutOptions
           .then () ->
             @currentBranch = ref.name()
-            atom.notifications.addError "Branch checkout successful: #{ref.name()}"
+            atom.notifications.addSuccess "Branch checkout successful: #{ref.name()}"
       .catch (error) ->
         console.log error
         atom.notifications.addError "Branch checkout unsuccessful: #{error}"
