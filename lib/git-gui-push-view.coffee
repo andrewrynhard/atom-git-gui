@@ -47,7 +47,7 @@ module.exports =
                         console.log "Pushing to `#{url}` as `#{userName}`"
                         return Git.Cred.userpassPlaintextNew username, password
                       transferProgress: (stats) ->
-                        console.log stats
+                        console.log "Stats: #{stats}"
                 .then () ->
                   return resolve()
           .catch (error) ->
