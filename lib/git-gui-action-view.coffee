@@ -1,3 +1,4 @@
+{Emitter} = require 'atom'
 {$, View} = require 'space-pen'
 GitGuiCommitView = require './git-gui-commit-view'
 GitGuiPushView = require './git-gui-push-view'
@@ -14,6 +15,7 @@ class GitGuiActionView extends View
           @button class: 'btn', id: 'action-view-action-button'
 
   initialize: ->
+    @emitter = new Emitter
     @commitView.hide()
     @pushView.hide()
     $(document).ready () ->
@@ -25,6 +27,12 @@ class GitGuiActionView extends View
 
   destroy: ->
 
+  onDidCommit: (callback) ->
+    @emitter.on 'did-commit', callback
+
+  onDidPush: (callback) ->
+    @emitter.on 'did-push', callback
+
   openCommitAction: ->
     @pushView.hide()
     @commitView.show()
@@ -33,12 +41,14 @@ class GitGuiActionView extends View
     $('#action-view-action-button').on 'click', () =>
       @commitView.commit()
       .then (oid) =>
-        @parentView.gitGuiStatusView.setStatuses()
+        @emitter.emit 'did-commit', oid
         $('#action-view-close-button').click()
-        atom.notifications.addSuccess "Commit successful: #{oid.tostrS()}"
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
         @commitView.hide()
+        atom.notifications.addSuccess "Commit successful: #{oid.tostrS()}"
+      .catch (error) ->
+        atom.notifications.addError "Push unsuccessful: #{error}"
 
   openPushAction: ->
     @commitView.hide()
@@ -47,12 +57,12 @@ class GitGuiActionView extends View
     $('#action-view-action-button').off 'click'
     $('#action-view-action-button').on 'click', () =>
       @pushView.push()
-      .then (status) =>
-        @parentView.gitGuiStatusView.setStatuses()
+      .then () =>
+        @emitter.emit 'did-push'
         $('#action-view-close-button').click()
-        atom.notifications.addSuccess("Push successful")
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
         @pushView.hide()
+        atom.notifications.addSuccess("Push successful")
       .catch (error) ->
         atom.notifications.addError "Push unsuccessful: #{error}"

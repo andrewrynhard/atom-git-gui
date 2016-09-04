@@ -1,4 +1,5 @@
-{View} = require 'space-pen'
+{CompositeDisposable} = require 'atom'
+{$, View} = require 'space-pen'
 GitGuiActionBarView = require './git-gui-action-bar-view'
 GitGuiActionView = require './git-gui-action-view'
 GitGuiStagingAreaView = require './git-gui-staging-area-view'
@@ -16,11 +17,27 @@ module.exports =
           @subview 'gitGuiSettingsView', new GitGuiSettingsView()
 
     initialize: ->
+      @subscriptions = new CompositeDisposable
+
       @gitGuiActionView = new GitGuiActionView()
       @modalPanel = atom.workspace.addModalPanel
         item: @gitGuiActionView,
         visible: true
       @gitGuiActionView.parentView = this
+
+      repo = atom.project.getRepositories()[0]
+
+      @subscriptions.add repo.onDidChangeStatus () =>
+        @updateAll()
+
+      @subscriptions.add repo.onDidChangeStatuses () =>
+        @updateAll()
+
+      @subscriptions.add @gitGuiActionView.onDidCommit () =>
+        @updateAll()
+
+      @subscriptions.add @gitGuiActionView.onDidPush () =>
+        @updateAll()
 
     serialize: ->
 
@@ -28,7 +45,28 @@ module.exports =
       @gitGuiActionBarView.destroy()
       @gitGuiActionView.destroy()
       @gitGuiStatusView.destroy()
+      @gitGuiDiffView.destroy()
       @gitGuiSettingsView.destroy()
+      @subscriptions.dispose()
 
-    setStatuses: ->
-      @gitGuiStatusView.setStatuses()
+    updateAll: ->
+      @gitGuiActionBarView.updateActionBar()
+      @gitGuiStatusView.updateStatuses()
+
+    open: ->
+      if $('.git-gui').hasClass 'open'
+        return
+
+      @updateAll()
+      $('.git-gui').addClass 'open'
+
+    close: ->
+      if ! $('.git-gui').hasClass 'open'
+        return
+
+      $('.git-gui').removeClass 'open'
+
+    isOpen: ->
+      if $('.git-gui').hasClass 'open'
+        return true
+      return false

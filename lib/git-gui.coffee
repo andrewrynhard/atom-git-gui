@@ -1,6 +1,5 @@
 GitGuiView = require './git-gui-view'
 {CompositeDisposable} = require 'atom'
-{$} = require 'space-pen'
 
 module.exports =
   gitGuiView: null
@@ -20,26 +19,16 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-gui:toggle': =>
       @toggle()
 
-    repo = atom.project.getRepositories()[0]
-
-    @subscriptions.add repo.onDidChangeStatus () =>
-      @gitGuiView.setStatuses()
-
-    @subscriptions.add repo.onDidChangeStatuses () =>
-      @gitGuiView.setStatuses()
-
   deactivate: ->
     @modalPanel.destroy()
-    @subscriptions.dispose()
     @gitGuiView.destroy()
+    @subscriptions.dispose()
 
   serialize: ->
     gitGuiViewState: @gitGuiView.serialize()
 
   toggle: ->
-    $(document).ready () =>
-      if $('.git-gui').hasClass 'open'
-        $('.git-gui').removeClass 'open'
-      else
-        @gitGuiView.setStatuses()
-        $('.git-gui').addClass 'open'
+    if @gitGuiView.isOpen()
+      @gitGuiView.close()
+    else
+      @gitGuiView.open()

@@ -26,19 +26,19 @@ module.exports =
                   Git.Reset.default repo, commit, filename
                 .then () =>
                   index.write()
-                  @setStatuses()
+                  @updateStatuses()
               # Stage the file
               else
                 if $(e.target).prev().prev().hasClass 'status-removed'
                   index.removeByPath filename
                   .then () =>
                     index.write()
-                    @setStatuses()
+                    @updateStatuses()
                 else
                   index.addByPath filename
                   .then () =>
                     index.write()
-                    @setStatuses()
+                    @updateStatuses()
           .catch (error) ->
             console.log error
 
@@ -70,8 +70,7 @@ module.exports =
 
     destroy: ->
 
-    setStatuses: ->
-      @parentView.gitGuiActionBarView.updateActionBar()
+    updateStatuses: ->
       $('#status-list').empty()
       $('#commit-action').removeClass 'available'
 
