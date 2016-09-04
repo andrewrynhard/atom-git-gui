@@ -38,5 +38,8 @@ module.exports =
 
   toggle: ->
     $(document).ready () =>
-      $('.git-gui').toggleClass 'open'
-      @gitGuiView.setStatuses()
+      if $('.git-gui').hasClass 'open'
+        $('.git-gui').removeClass 'open'
+      else
+        @gitGuiView.setStatuses()
+        $('.git-gui').addClass 'open'
