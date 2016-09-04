@@ -14,8 +14,6 @@ module.exports =
           @li class: 'list-item', =>
             @a class: 'icon', id: 'pull-action'
           @li class: 'list-item', =>
-            @a class: 'icon', id: 'branch-action'
-          @li class: 'list-item', =>
             @a class: 'icon', id: 'settings-action'
 
     # TODO: Add an `amend` option for `commit`
@@ -53,11 +51,6 @@ module.exports =
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
           $('#action-view').addClass 'open'
           # @parentView.gitGuiActionView.openPullAction()
-
-        $('body').on 'click', '#branch-action', () ->
-          $('atom-workspace-axis.horizontal').toggleClass 'blur'
-          $('#action-view').addClass 'open'
-          # @parentView.gitGuiActionView.openBranchAction()
 
         $('body').on 'click', '#settings-action', () ->
           $('#settings').toggleClass('open')
