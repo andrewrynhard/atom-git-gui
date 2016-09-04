@@ -10,7 +10,7 @@ module.exports =
           @li class: 'list-item', =>
             @a class: 'icon', id: 'commit-action'
           @li class: 'list-item', =>
-            @a class: 'icon available', id: 'push-action'
+            @a class: 'icon', id: 'push-action'
           @li class: 'list-item', =>
             @a class: 'icon', id: 'pull-action'
           @li class: 'list-item', =>
@@ -70,13 +70,19 @@ module.exports =
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) ->
-        Git.Reference.lookup repo, 'refs/heads/master'
+        Git.Reference.nameToId repo, 'refs/heads/master'
         .then (local) ->
-          Git.Reference.lookup repo, 'refs/remotes/origin/master'
+          Git.Reference.nameToId repo, 'refs/remotes/origin/master'
           .then (upstream) ->
             Git.Graph.aheadBehind(repo, local, upstream)
             .then (aheadbehind) ->
-              if aheadbehind.ahead > 0 || aheadbehind.behind > 0
-                console.log 'yes'
+              if aheadbehind.ahead
+                $('#push-action').addClass 'available'
+              else
+                $('#push-action').removeClass 'available'
+              if aheadbehind.behind
+                $('#pull-action').addClass 'available'
+              else
+                $('#pull-action').removeClass 'available'
       .catch (error) ->
         console.log error
