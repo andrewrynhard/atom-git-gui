@@ -99,24 +99,14 @@ module.exports =
               $(diffSpan).data('in-working-tree', 'true')
             if file.isNew()
               statusSpan.addClass 'status-added icon-diff-added'
-              value = parseInt($('#added-badge').text(), 10) + 1
-              $('#added-badge').text(value)
             if file.isModified()
               li.append diffSpan
-              value = parseInt($('#modified-badge').text(), 10) + 1
-              $('#modified-badge').text(value)
               statusSpan.addClass 'status-modified icon-diff-modified'
             if file.isDeleted()
-              value = parseInt($('#removed-badge').text(), 10) + 1
-              $('#removed-badge').text(value)
               statusSpan.addClass 'status-removed icon-diff-removed'
             if file.isRenamed()
-              value = parseInt($('#renamed-badge').text(), 10) + 1
-              $('#renamed-badge').text(value)
               statusSpan.addClass 'status-renamed icon-diff-renamed'
             if file.isIgnored()
-              value = parseInt($('#ignored-badge').text(), 10) + 1
-              $('#ignored-badge').text(value)
               statusSpan.addClass 'status-ignored icon-diff-ignored'
             $('#status-list').append li
       .catch (error) ->

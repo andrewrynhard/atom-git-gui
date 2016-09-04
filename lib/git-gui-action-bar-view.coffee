@@ -17,11 +17,6 @@ module.exports =
             @a class: 'icon', id: 'branch-action'
           @li class: 'list-item', =>
             @a class: 'icon', id: 'settings-action'
-        # @span class: 'badge icon icon-diff-ignored', id: 'ignored-badge', 0
-        # @span class: 'badge icon icon-diff-added', id: 'added-badge', 0
-        # @span class: 'badge icon icon-diff-modified', id: 'modified-badge', 0
-        # @span class: 'badge icon icon-diff-removed', id: 'removed-badge', 0
-        # @span class: 'badge icon icon-diff-renamed', id: 'renamed-badge', 0
 
     # TODO: Add an `amend` option for `commit`
     # TODO: Add an `merge` option for `pull`
