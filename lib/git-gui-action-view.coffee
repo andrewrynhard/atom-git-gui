@@ -9,7 +9,7 @@ class GitGuiActionView extends View
     @div id: 'action-view', =>
       @subview 'commitView', new GitGuiCommitView()
       @subview 'pushView', new GitGuiPushView()
-      @div class: 'btn-toolbar', =>
+      @div class: 'btn-toolbar', id: 'action-view-btn-group', =>
         @div class: 'btn-group', =>
           @button class: 'btn', id: 'action-view-close-button', 'Close'
           @button class: 'btn', id: 'action-view-action-button'
