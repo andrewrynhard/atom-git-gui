@@ -8,7 +8,7 @@ module.exports =
           @li class: 'list-item', =>
             @a class: 'icon', id: 'commit-action'
           @li class: 'list-item', =>
-            @a class: 'icon', id: 'push-action'
+            @a class: 'icon available', id: 'push-action'
           @li class: 'list-item', =>
             @a class: 'icon', id: 'pull-action'
           @li class: 'list-item', =>
@@ -45,10 +45,10 @@ module.exports =
           $('#action-view').addClass 'open'
           @parentView.gitGuiActionView.openCommitAction()
 
-        $('body').on 'click', '#push-action', () ->
+        $('body').on 'click', '#push-action', () =>
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
           $('#action-view').addClass 'open'
-          # @parentView.gitGuiActionView.openPushAction()
+          @parentView.gitGuiActionView.openPushAction()
 
         $('body').on 'click', '#pull-action', () ->
           $('atom-workspace-axis.horizontal').toggleClass 'blur'

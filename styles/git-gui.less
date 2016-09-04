@@ -208,16 +208,16 @@ atom-workspace-axis.horizontal {
 }
 // TODO: Extract the common code for the following, and make it a class
 
-#commit-action.available {
-    -webkit-transition: opacity 0.15s ease;
-    opacity: 1;
-    pointer-events: inherit;
-}
-
 #commit-action {
     -webkit-transition: opacity 0.15s ease;
     opacity: 0.25;
     pointer-events: none;
+}
+
+#commit-action.available {
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 1;
+    pointer-events: inherit;
 }
 
 #commit-action::before {
@@ -225,21 +225,16 @@ atom-workspace-axis.horizontal {
     content: "\f01f";
 }
 
-#branch-action::before {
-    font-family: "Octicons Regular";
-    content: "\f020";
+#push-action {
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 0.25;
+    pointer-events: none;
 }
 
 #push-action.available {
     -webkit-transition: opacity 0.15s ease;
     opacity: 1;
     pointer-events: inherit;
-}
-
-#push-action {
-    -webkit-transition: opacity 0.15s ease;
-    opacity: 0.25;
-    pointer-events: none;
 }
 
 #push-action::before {
@@ -267,6 +262,11 @@ atom-workspace-axis.horizontal {
 #pull-action::before {
     font-family: "Octicons Regular";
     content: "\f006";
+}
+
+#branch-action::before {
+    font-family: "Octicons Regular";
+    content: "\f020";
 }
 
 #settings-header::before {
