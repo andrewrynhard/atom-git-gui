@@ -46,8 +46,7 @@ module.exports =
                       credentials: () ->
                         return Git.Cred.userpassPlaintextNew username, password
                       transferProgress: (stats) ->
-                        console.log stats
-                        console.log("transfer progress")
+                        return console.log stats
                 .then () ->
                   return resolve()
           .catch (error) ->
