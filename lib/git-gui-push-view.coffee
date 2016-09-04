@@ -26,16 +26,18 @@ module.exports =
           pathToRepo = path.join atom.project.getPaths()[0], '.git'
           Git.Repository.open pathToRepo
           .then (repo) ->
-            Git.Remote.lookup repo, 'origin'
-            .then (remote) ->
-              remote.push(["refs/heads/master:refs/heads/master"],
-                {
-                  callbacks:
-                    credentials: (url, userName) ->
-                      return Git.Cred.userpassPlaintextNew username, password
-                } )
-              .then (status) ->
-                return resolve status
+            repo.getCurrentBranch()
+            .then (ref) ->
+              Git.Remote.lookup repo, 'origin'
+              .then (remote) ->
+                remote.push(["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
+                  {
+                    callbacks:
+                      credentials: (url, userName) ->
+                        return Git.Cred.userpassPlaintextNew username, password
+                  } )
+                .then (status) ->
+                  return resolve()
           .catch (error) ->
             return reject error
 
