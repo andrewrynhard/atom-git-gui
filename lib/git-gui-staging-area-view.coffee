@@ -19,8 +19,8 @@ module.exports =
             repo.refreshIndex()
             .then (index) =>
               # Reset the file if staged
-              if $(e.target).prev().hasClass 'icon-check'
-                $(e.target).prev().removeClass 'icon-check'
+              if $("[id='status-for-#{path.basename filename}']").hasClass 'staged'
+                $("[id='status-for-#{path.basename filename}']").removeClass 'staged'
                 repo.getHeadCommit()
                 .then (commit) ->
                   Git.Reset.default repo, commit, filename
@@ -29,7 +29,6 @@ module.exports =
                   @setStatuses()
               # Stage the file
               else
-                $(e.target).addClass 'icon icon-check'
                 if $(e.target).prev().prev().hasClass 'status-removed'
                   index.removeByPath filename
                   .then () =>
@@ -83,7 +82,7 @@ module.exports =
           for file in statuses
             li = $("<li class='list-item'></li")
             div = $("<div class='inline-block status icon'></div>")
-            span = $("<span class='icon' id='status-for-#{file.path()}'></span>")
+            span = $("<span class='icon icon-check' id='status-for-#{path.basename file.path()}'></span>")
             a = $("<span id='staging-area-file' data-file='#{file.path()}'>#{file.path()}</span>")
             # history = $("<span class='icon icon-history'></span>")
             diff = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{file.path()}' data-in-working-tree='false'></span>")
@@ -93,7 +92,7 @@ module.exports =
             # li.append history
             if file.inIndex()
               $('#commit-action').addClass 'available'
-              span.addClass 'icon-check'
+              span.addClass 'staged'
               span.addClass 'status status-added'
             if file.inWorkingTree()
               span.addClass 'status status-modified'
