@@ -43,10 +43,11 @@ module.exports =
               .then (remote) ->
                 remote.push ["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
                     callbacks:
-                      credentials: () ->
+                      credentials: (url, userName) ->
+                        console.log "Pushing to `#{url}` as `#{userName}`"
                         return Git.Cred.userpassPlaintextNew username, password
                       transferProgress: (stats) ->
-                        return console.log stats
+                        console.log stats
                 .then () ->
                   return resolve()
           .catch (error) ->
