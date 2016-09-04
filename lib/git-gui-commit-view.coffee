@@ -16,7 +16,7 @@ module.exports =
 
     destroy: ->
 
-    commit: (callback) ->
+    commit: () ->
       promise = new Promise (resolve, reject) =>
         message = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
         $(document).ready ->
