@@ -11,10 +11,10 @@ module.exports =
     @content: ->
       @div class: 'git-gui', =>
         @subview 'gitGuiDiffView', new GitGuiDiffView()
+        @subview 'settingsView', new GitGuiSettingsView()
         @div class: 'git-gui-overlay', =>
           @subview 'gitGuiActionBarView', new GitGuiActionBarView()
           @subview 'gitGuiStatusView', new GitGuiStagingAreaView()
-          @subview 'gitGuiSettingsView', new GitGuiSettingsView()
 
     initialize: ->
       @subscriptions = new CompositeDisposable
@@ -46,7 +46,6 @@ module.exports =
       @gitGuiActionView.destroy()
       @gitGuiStatusView.destroy()
       @gitGuiDiffView.destroy()
-      @gitGuiSettingsView.destroy()
       @subscriptions.dispose()
 
     updateAll: ->

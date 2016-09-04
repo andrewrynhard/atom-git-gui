@@ -26,6 +26,9 @@ class GitGuiActionView extends View
   serialize: ->
 
   destroy: ->
+    @commitView.destroy()
+    @pushView.destroy()
+    @gitGuiSettingsView.destroy()
 
   onDidCommit: (callback) ->
     @emitter.on 'did-commit', callback
@@ -41,10 +44,10 @@ class GitGuiActionView extends View
     $('#action-view-action-button').on 'click', () =>
       @commitView.commit()
       .then (oid) =>
-        @emitter.emit 'did-commit', oid
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
+        @emitter.emit 'did-commit', oid
         @commitView.hide()
         atom.notifications.addSuccess "Commit successful: #{oid.tostrS()}"
       .catch (error) ->
@@ -58,11 +61,28 @@ class GitGuiActionView extends View
     $('#action-view-action-button').on 'click', () =>
       @pushView.push()
       .then () =>
-        @emitter.emit 'did-push'
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
         @pushView.hide()
+        @emitter.emit 'did-push'
+        atom.notifications.addSuccess("Push successful")
+      .catch (error) ->
+        atom.notifications.addError "Push unsuccessful: #{error}"
+
+  openSettingsAction: ->
+    @commitView.hide()
+    @pushView.show()
+    $('#action-view-action-button').text 'Save'
+    $('#action-view-action-button').off 'click'
+    $('#action-view-action-button').on 'click', () =>
+      @pushView.push()
+      .then () =>
+        $('#action-view-close-button').click()
+        $('#action-view-action-button').empty()
+        $('#action-view-action-button').off 'click'
+        @pushView.hide()
+        @emitter.emit 'did-push'
         atom.notifications.addSuccess("Push successful")
       .catch (error) ->
         atom.notifications.addError "Push unsuccessful: #{error}"

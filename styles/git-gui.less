@@ -33,6 +33,32 @@ atom-workspace-axis.horizontal {
     width: 800px;
 }
 
+.git-gui-diff-view {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 7px;
+    z-index: 1;
+}
+
+.git-gui-diff-view.open {
+    display: flex;
+}
+
+.git-gui-overlay {
+    display: flex;
+    flex-direction: column;
+    flex: 1; // Stretch to full height
+    height: 100%;
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 1;
+    -webkit-filter: blur(0px);
+    transition: 0.15s;
+}
+
 .git-gui-action-bar-list {
     display: inline-flex;
     flex-direction: row;
@@ -48,33 +74,20 @@ atom-workspace-axis.horizontal {
     font-size: 28px;
 }
 
-#action-view {
-    -webkit-transition: height 0.15s ease;
-    height: 0;
-    overflow: hidden;
-    padding-left: 7px;
-    padding-right: 7px;
-}
-
-#action-view.open {
-    -webkit-transition: height 0.15s ease;
-    height: 500px;
-}
-
 .git-gui-staging-area {
-    width: 100%;
-    height: 100%;
+    width:100% height: 100%;
     padding-left: 7px;
     padding-right: 7px;
     -webkit-transition: opacity 0.15s ease;
     opacity: 1;
     -webkit-filter: blur(0px);
     transition: 0.15s;
+    overflow-y: auto;
 }
 
 #staging-area-file-diff {
-    position: absolute;
     right: 14px;
+    margin-left: auto;
 }
 
 [id^="status-for-"] {
@@ -85,59 +98,19 @@ atom-workspace-axis.horizontal {
     opacity: 1;
 }
 
-.git-gui-diff-view {
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    padding: 7px;
-    z-index: 1;
-}
-
-#diff-text {
-    height: 100%;
-    white-space: pre;
-    overflow-y: auto;
-}
-
-.git-gui-diff-view.open {
-    display: block;
-}
-
-.git-gui-overlay {
-    height: 100%;
-    -webkit-transition: opacity 0.15s ease;
-    opacity: 1;
-    -webkit-filter: blur(0px);
-    transition: 0.15s;
-}
-
 .git-gui-settings {
-    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     -webkit-transition: height 0.15s ease;
-    height: 50px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    overflow: hidden;
+    height: 0;
+    z-index: 0;
 }
 
 .git-gui-settings.open {
-    -webkit-transition: height 0.15s ease;
     height: 325px;
-}
-
-.git-gui-settings-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 50px;
-    cursor: pointer;
-    font-size: 28px;
+    z-index: 1;
 }
 
 .git-gui-settings-content {
@@ -161,7 +134,7 @@ atom-workspace-axis.horizontal {
 }
 
 .git-gui-settings-subview.active {
-    display: inline-block;
+    display: block;
 }
 
 .git-gui-settings-menu-list {
@@ -192,12 +165,44 @@ atom-workspace-axis.horizontal {
     font-size: 21px;
 }
 
+#diff-text {
+    height: 100%;
+    white-space: pre;
+    overflow-y: auto;
+}
+
+#action-view {
+    -webkit-transition: height 0.15s ease;
+    height: 0;
+    overflow: hidden;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+#action-view.open {
+    -webkit-transition: height 0.15s ease;
+    height: 500px;
+}
+
 #git-gui-remotes-list {
     width: 33%;
 }
 
 #status-list {
     height: 100%;
+    width: 100%;
+}
+
+#staging-area-file {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.git-gui-status-list-item {
+    display: flex;
+    flex-direction: row;
 }
 
 #git-gui-user-signingkey-list {
@@ -273,9 +278,8 @@ atom-workspace-axis.horizontal {
     content: "\f020";
 }
 
-#settings-header::before {
+#settings-action::before {
     font-family: "Octicons Regular";
-    padding-right: 14px;
     content: "\f07c";
 }
 

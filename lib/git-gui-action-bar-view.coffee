@@ -15,6 +15,8 @@ module.exports =
             @a class: 'icon', id: 'pull-action'
           @li class: 'list-item', =>
             @a class: 'icon', id: 'branch-action'
+          @li class: 'list-item', =>
+            @a class: 'icon', id: 'settings-action'
         # @span class: 'badge icon icon-diff-ignored', id: 'ignored-badge', 0
         # @span class: 'badge icon icon-diff-added', id: 'added-badge', 0
         # @span class: 'badge icon icon-diff-modified', id: 'modified-badge', 0
@@ -61,6 +63,12 @@ module.exports =
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
           $('#action-view').addClass 'open'
           # @parentView.gitGuiActionView.openBranchAction()
+
+        $('body').on 'click', '#settings-action', () =>
+          $('#settings').toggleClass('open')
+          $('.git-gui-staging-area').toggleClass('fade-and-blur')
+          $('.git-gui-settings-menu-list li.selected').removeClass('selected')
+          $('.git-gui-settings-subview.active').removeClass('active')
 
     serialize: ->
 

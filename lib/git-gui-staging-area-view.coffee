@@ -80,44 +80,44 @@ module.exports =
         repo.getStatus()
         .then (statuses) ->
           for file in statuses
-            li = $("<li class='list-item'></li")
-            div = $("<div class='inline-block status icon'></div>")
-            span = $("<span class='icon icon-check' id='status-for-#{path.basename file.path()}'></span>")
-            a = $("<span id='staging-area-file' data-file='#{file.path()}'>#{file.path()}</span>")
+            li = $("<li class='list-item git-gui-status-list-item'></li")
+            statusSpan = $("<span class='status icon'></span>")
+            stageSpan = $("<span class='icon icon-check' id='status-for-#{path.basename file.path()}'></span>")
+            fileSpan = $("<span id='staging-area-file' data-file='#{file.path()}'>#{file.path()}</span>")
             # history = $("<span class='icon icon-history'></span>")
-            diff = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{file.path()}' data-in-working-tree='false'></span>")
-            li.append div
-            li.append span
-            li.append a
+            diffSpan = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{file.path()}' data-in-working-tree='false'></span>")
+            li.append statusSpan
+            li.append stageSpan
+            li.append fileSpan
             # li.append history
             if file.inIndex()
               $('#commit-action').addClass 'available'
-              span.addClass 'staged'
-              span.addClass 'status status-added'
+              stageSpan.addClass 'staged'
+              stageSpan.addClass 'status status-added'
             if file.inWorkingTree()
-              span.addClass 'status status-modified'
-              $(diff).data('in-working-tree', 'true')
+              stageSpan.addClass 'status status-modified'
+              $(diffSpan).data('in-working-tree', 'true')
             if file.isNew()
-              div.addClass 'status-added icon-diff-added'
+              statusSpan.addClass 'status-added icon-diff-added'
               value = parseInt($('#added-badge').text(), 10) + 1
               $('#added-badge').text(value)
             if file.isModified()
-              li.append diff
+              li.append diffSpan
               value = parseInt($('#modified-badge').text(), 10) + 1
               $('#modified-badge').text(value)
-              div.addClass 'status-modified icon-diff-modified'
+              statusSpan.addClass 'status-modified icon-diff-modified'
             if file.isDeleted()
               value = parseInt($('#removed-badge').text(), 10) + 1
               $('#removed-badge').text(value)
-              div.addClass 'status-removed icon-diff-removed'
+              statusSpan.addClass 'status-removed icon-diff-removed'
             if file.isRenamed()
               value = parseInt($('#renamed-badge').text(), 10) + 1
               $('#renamed-badge').text(value)
-              div.addClass 'status-renamed icon-diff-renamed'
+              statusSpan.addClass 'status-renamed icon-diff-renamed'
             if file.isIgnored()
               value = parseInt($('#ignored-badge').text(), 10) + 1
               $('#ignored-badge').text(value)
-              div.addClass 'status-ignored icon-diff-ignored'
+              statusSpan.addClass 'status-ignored icon-diff-ignored'
             $('#status-list').append li
       .catch (error) ->
         console.log error
