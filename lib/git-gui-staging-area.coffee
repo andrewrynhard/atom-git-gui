@@ -37,6 +37,55 @@ module.exports =
           .catch (error) ->
             console.log error
 
+        $('#status-list').on 'click', '#staging-area-file-diff', (e) =>
+          filename = $(e.target).data("file")
+          pathToRepo = path.join atom.project.getPaths()[0], '.git'
+          Git.Repository.open pathToRepo
+          .then (repo) ->
+            repo.getHeadCommit()
+            .then (commit) ->
+              repo.getTree(commit.treeId())
+              .then (tree) ->
+                repo.refreshIndex()
+                .then (index) ->
+                  if $(e.target).data("in-working-tree")
+                    Git.Diff.treeToWorkdir(repo, tree, index, null)
+                    .then (diff) ->
+                      diff.patches()
+                      .then (patches) ->
+                        for patch in patches
+                          if patch.newFile().path() != filename
+                            continue
+                          patch.hunks()
+                          .then (hunks) ->
+                            for hunk in hunks
+                              hunk.lines()
+                              .then (lines) ->
+                                console.log 'diff', patch.oldFile().path(), patch.newFile().path()
+                                console.log hunk.header().trim()
+                                for line in lines
+                                  console.log String.fromCharCode(line.origin()) + line.content().trim()
+                  else
+                    Git.Diff.treeToIndex(repo, tree, index, null)
+                    .then (diff) ->
+                      diff.patches()
+                      .then (patches) ->
+                        for patch in patches
+                          if patch.newFile().path() != filename
+                            continue
+                          patch.hunks()
+                          .then (hunks) ->
+                            for hunk in hunks
+                              hunk.lines()
+                              .then (lines) ->
+                                console.log 'diff', patch.oldFile().path(), patch.newFile().path()
+                                console.log hunk.header().trim()
+                                for line in lines
+                                  console.log String.fromCharCode(line.origin()) + line.content().trim()
+
+          .catch (error) ->
+            console.log error
+
     serialize: ->
 
     destroy: ->
@@ -55,15 +104,20 @@ module.exports =
             div = $("<div class='inline-block status icon'></div>")
             span = $("<span class='icon' id='status-for-#{file.path()}'></span>")
             a = $("<span id='staging-area-file' data-file='#{file.path()}'>#{file.path()}</span>")
+            # history = $("<span class='icon icon-history'></span>")
+            diff = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{file.path()}' data-in-working-tree='false'></span>")
             li.append div
             li.append span
             li.append a
+            # li.append history
+            li.append diff
             if file.inIndex()
               $('#commit-action').addClass 'available'
               span.addClass 'icon-check'
               span.addClass 'status status-added'
             if file.inWorkingTree()
               span.addClass 'status status-modified'
+              $(diff).data('in-working-tree', 'true')
             if file.isNew()
               div.addClass 'status-added icon-diff-added'
               value = parseInt($('#added-badge').text(), 10) + 1
