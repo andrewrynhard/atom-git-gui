@@ -32,7 +32,6 @@ module.exports =
                 {
                   callbacks:
                     credentials: (url, userName) ->
-                      console.log url, userName
                       return Git.Cred.userpassPlaintextNew username, password
                 } )
               .then (status) ->
