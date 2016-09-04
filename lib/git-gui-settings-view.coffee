@@ -1,6 +1,7 @@
 {View} = require 'space-pen'
 GitGuiMenuView = require './git-gui-settings-menu-view'
-GitConfigView = require './git-config-view'
+GitGuiRepoView = require './git-gui-repo-view'
+GitGuiConfigView = require './git-gui-config-view'
 
 module.exports =
   class GitGuiSettingsView extends View
@@ -8,7 +9,8 @@ module.exports =
       @div class: 'git-gui-settings', id: 'settings', =>
         @div class: 'git-gui-settings-content', =>
           @subview 'gitGuiSettingsMenu', new GitGuiMenuView()
-          @subview 'gitConfig', new GitConfigView()
+          @subview 'gitRepoView', new GitGuiRepoView()
+          @subview 'gitConfigView', new GitGuiConfigView()
 
     initialize: ->
 

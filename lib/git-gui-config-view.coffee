@@ -7,7 +7,7 @@ Git = require 'nodegit'
 {CompositeDisposable} = require 'atom'
 
 module.exports =
-  class GitConfigView extends View
+  class GitGuiConfigView extends View
     @content: ->
       @div class: 'git-gui-settings-subview', id: 'config-view', =>
         @h1 id: 'user', 'User'

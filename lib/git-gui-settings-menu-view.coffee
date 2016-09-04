@@ -21,5 +21,5 @@ module.exports =
       $(element).addClass 'selected'
       selectedItem = element.children(":first").attr("id")
       switch selectedItem
-        # when 'repo' then $('repo-view').addClass 'active'
+        when 'repo' then $('#repo-view').addClass 'active'
         when 'config' then $('#config-view').addClass 'active'
