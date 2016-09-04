@@ -33,10 +33,10 @@ module.exports =
                 remote.push(["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
                   {
                     callbacks:
-                      credentials: (url, userName) ->
+                      credentials: () ->
                         return Git.Cred.userpassPlaintextNew username, password
                   } )
-                .then (status) ->
+                .then () ->
                   return resolve()
           .catch (error) ->
             return reject error
