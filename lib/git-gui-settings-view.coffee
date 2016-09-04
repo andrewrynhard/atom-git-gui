@@ -1,4 +1,4 @@
-{$, View} = require 'space-pen'
+{View} = require 'space-pen'
 GitGuiMenuView = require './git-gui-settings-menu-view'
 GitConfigView = require './git-config-view'
 

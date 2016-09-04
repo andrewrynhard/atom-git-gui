@@ -59,7 +59,7 @@ module.exports =
           $('#action-view').addClass 'open'
           # @parentView.gitGuiActionView.openBranchAction()
 
-        $('body').on 'click', '#settings-action', () =>
+        $('body').on 'click', '#settings-action', () ->
           $('#settings').toggleClass('open')
           $('.git-gui-staging-area').toggleClass('fade-and-blur')
           $('.git-gui-settings-menu-list li.selected').removeClass('selected')
