@@ -74,6 +74,8 @@ module.exports =
         .then (ref) ->
           Git.Reference.nameToId repo, "refs/heads/#{ref.shorthand()}"
           .then (local) ->
+            # TODO: Consider the case when a user wants to get the ahead/behind
+            #       count from a remote other than origin.
             Git.Reference.nameToId repo, "refs/remotes/origin/#{ref.shorthand()}"
             .then (upstream) ->
               Git.Graph.aheadBehind(repo, local, upstream)
