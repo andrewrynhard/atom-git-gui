@@ -14,6 +14,7 @@ module.exports =
     destroy: ->
 
     close: ->
+      $('#diff-text').empty()
       $('.git-gui').removeClass 'expanded'
       $('.git-gui-overlay').removeClass 'fade-and-blur'
       $('.git-gui-diff-view').removeClass 'open'
