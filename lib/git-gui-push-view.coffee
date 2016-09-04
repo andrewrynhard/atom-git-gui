@@ -14,10 +14,11 @@ module.exports =
         @subview 'userPassword', new TextEditorView(mini: true)
         @h2 "Remote"
         @div =>
-          @select class: 'input-select', id: 'remotes-list'
+          @select class: 'input-select', id: 'git-gui-remotes-list'
 
     initialize: ->
       $(document).ready () ->
+        $(@userPassword).attr 'id', 'user-password'
         pathToRepo = path.join atom.project.getPaths()[0], '.git'
         Git.Repository.open pathToRepo
         .then (repo) ->
@@ -25,7 +26,7 @@ module.exports =
           .then (remotes) ->
             for remote in remotes
               option = "<option value=#{remote}>#{remote}</option>"
-              $('#remotes-list').append $(option)
+              $('#git-gui-remotes-list').append $(option)
 
     destroy: ->
 
@@ -39,7 +40,7 @@ module.exports =
           .then (repo) ->
             repo.getCurrentBranch()
             .then (ref) ->
-              Git.Remote.lookup repo, $('#remotes-list').val()
+              Git.Remote.lookup repo, $('#git-gui-remotes-list').val()
               .then (remote) ->
                 remote.push(["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
                   {

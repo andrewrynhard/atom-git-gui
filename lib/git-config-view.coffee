@@ -17,7 +17,7 @@ module.exports =
         @subview 'userEmail', new TextEditorView(mini: true)
         @label 'Signing Key'
         @div =>
-          @select class: 'input-select', id: 'user-signing-key'
+          @select class: 'input-select', id: 'git-gui-user-signingkey-list'
 
     initialize: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
@@ -35,7 +35,7 @@ module.exports =
         @saveUserEmail()
 
       $(document).ready () =>
-        $('#user-signing-key').on 'change', () =>
+        $('#git-gui-user-signingkey-list').on 'change', () =>
           @saveUserSigningKey()
 
     destroy: ->
@@ -101,7 +101,7 @@ module.exports =
     addUserSigningKey: (signingkey) ->
       $(document).ready () ->
         # Clear the `select` menu
-        $('#user-signing-key').find('option').remove().end()
+        $('#git-gui-user-signingkey-list').find('option').remove().end()
         home = process.env.HOME
         pubring = path.join(home, '.gnupg', 'secring.asc')
         fs.readFile pubring, 'utf-8', (err, data) ->
@@ -114,10 +114,10 @@ module.exports =
             userid = userid.replace(/>/g, '&gt')
             keyid = key.primaryKey.getKeyId().toHex()
             option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
-            $('#user-signing-key').append $(option)
+            $('#git-gui-user-signingkey-list').append $(option)
             # Select the active signing key
             if keyid == signingkey
-              $('#user-signing-key').val(keyid)
+              $('#git-gui-user-signingkey-list').val(keyid)
 
     saveUserSigningKey: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
@@ -126,7 +126,7 @@ module.exports =
         repo.config()
         .then (config) ->
           # Set the user signingkey
-          config.setString 'user.signingkey', $('#user-signing-key').val()
+          config.setString 'user.signingkey', $('#git-gui-user-signingkey-list').val()
           .then () ->
             # Ensure that commits are signed
             config.setString 'commit.gpgsign', 'true'
