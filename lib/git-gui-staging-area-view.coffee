@@ -30,14 +30,22 @@ module.exports =
               # Stage the file
               else
                 $(e.target).addClass 'icon icon-check'
-                index.addByPath filename
-                .then () =>
-                  index.write()
-                  @setStatuses()
+                if $(e.target).prev().prev().hasClass 'status-removed'
+                  index.removeByPath filename
+                  .then () =>
+                    index.write()
+                    @setStatuses()
+                else
+                  index.addByPath filename
+                  .then () =>
+                    index.write()
+                    @setStatuses()
           .catch (error) ->
             console.log error
 
         $('#status-list').on 'click', '#staging-area-file-diff', (e) =>
+          $('.git-gui-diff-view').toggleClass 'open'
+          $('.git-gui.open').toggleClass 'expanded'
           filename = $(e.target).data("file")
           pathToRepo = path.join atom.project.getPaths()[0], '.git'
           Git.Repository.open pathToRepo
@@ -61,10 +69,12 @@ module.exports =
                             for hunk in hunks
                               hunk.lines()
                               .then (lines) ->
-                                console.log 'diff', patch.oldFile().path(), patch.newFile().path()
-                                console.log hunk.header().trim()
+                                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
+                                text += hunk.header()
                                 for line in lines
-                                  console.log String.fromCharCode(line.origin()) + line.content().trim()
+                                  text += String.fromCharCode(line.origin()) + line.content()
+                                $('#diff-text').text text
+                                $('.git-gui-overlay').addClass 'fade-and-blur'
                   else
                     Git.Diff.treeToIndex(repo, tree, index, null)
                     .then (diff) ->
@@ -78,11 +88,12 @@ module.exports =
                             for hunk in hunks
                               hunk.lines()
                               .then (lines) ->
-                                console.log 'diff', patch.oldFile().path(), patch.newFile().path()
-                                console.log hunk.header().trim()
+                                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
+                                text += hunk.header()
                                 for line in lines
-                                  console.log String.fromCharCode(line.origin()) + line.content().trim()
-
+                                  text += String.fromCharCode(line.origin()) + line.content()
+                                $('#diff-text').text text
+                                $('.git-gui-overlay').addClass 'fade-and-blur'
           .catch (error) ->
             console.log error
 
@@ -110,7 +121,6 @@ module.exports =
             li.append span
             li.append a
             # li.append history
-            li.append diff
             if file.inIndex()
               $('#commit-action').addClass 'available'
               span.addClass 'icon-check'
@@ -123,6 +133,7 @@ module.exports =
               value = parseInt($('#added-badge').text(), 10) + 1
               $('#added-badge').text(value)
             if file.isModified()
+              li.append diff
               value = parseInt($('#modified-badge').text(), 10) + 1
               $('#modified-badge').text(value)
               div.addClass 'status-modified icon-diff-modified'

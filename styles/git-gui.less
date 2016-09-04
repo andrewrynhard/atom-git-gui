@@ -28,6 +28,11 @@ atom-workspace-axis.horizontal {
     width: 500px;
 }
 
+.git-gui.open.expanded {
+    -webkit-transition: width 0.22s ease;
+    width: 800px;
+}
+
 .git-gui-action-bar-list {
     display: inline-flex;
     flex-direction: row;
@@ -61,6 +66,41 @@ atom-workspace-axis.horizontal {
     height: 100%;
     padding-left: 7px;
     padding-right: 7px;
+}
+
+.git-gui-diff-view {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 7px;
+    z-index: 1;
+}
+
+#diff-text {
+    white-space: pre;
+    overflow-y: auto;
+}
+
+.git-gui-diff-view.open {
+    display: block;
+}
+
+.git-gui-overlay {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 1;
+    -webkit-filter: blur(0px);
+    transition: 0.22s;
+    height: 100%;
+}
+
+.git-gui-overlay.fade-and-blur {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 0.2;
+    -webkit-filter: blur(2px);
+    transition: 0.22s;
 }
 
 .git-gui-settings {
