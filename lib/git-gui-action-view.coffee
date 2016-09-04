@@ -46,9 +46,8 @@ class GitGuiActionView extends View
     $('#action-view-action-button').text 'Push'
     $('#action-view-action-button').off 'click'
     $('#action-view-action-button').on 'click', () =>
-      @pushView.push('andrewrynhard', '259558afd2967c5d38f5d111ed12bca73456a2ef')
+      @pushView.push()
       .then (status) =>
-        console.log status
         @parentView.gitGuiStatusView.setStatuses()
         $('#action-view-close-button').click()
         atom.notifications.addSuccess("Push successful")
