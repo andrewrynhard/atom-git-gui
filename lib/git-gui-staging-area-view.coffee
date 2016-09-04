@@ -24,9 +24,9 @@ module.exports =
                 repo.getHeadCommit()
                 .then (commit) ->
                   Git.Reset.default repo, commit, filename
-                .then () =>
-                  index.write()
-                  @updateStatuses()
+                  .then () =>
+                    index.write()
+                    @updateStatuses()
               # Stage the file
               else
                 if $(e.target).prev().prev().hasClass 'status-removed'
@@ -66,6 +66,28 @@ module.exports =
           .catch (error) ->
             console.log error
 
+        $('#status-list').on 'click', '#remove-staging-area-file', (e) =>
+          filename = $(e.target).data("file")
+          atom.confirm
+            message: "Remove changes?"
+            detailedMessage: "This will remove the changes made to:\n\t #{filename}"
+            buttons:
+              Ok: =>
+                filename = $(e.target).data("file")
+                pathToRepo = path.join atom.project.getPaths()[0], '.git'
+                Git.Repository.open pathToRepo
+                .then (repo) =>
+                  repo.getHeadCommit()
+                  .then (commit) =>
+                    checkoutOptions = new Git.CheckoutOptions()
+                    checkoutOptions.paths = [filename]
+                    Git.Reset.reset(repo, commit, Git.Reset.TYPE.HARD, checkoutOptions)
+                    .then () =>
+                      @updateStatuses()
+                .catch (error) ->
+                  console.log error
+              Cancel: ->
+
     serialize: ->
 
     destroy: ->
@@ -84,12 +106,11 @@ module.exports =
             statusSpan = $("<span class='status icon'></span>")
             stageSpan = $("<span class='icon icon-check' id='status-for-#{path.basename file.path()}'></span>")
             fileSpan = $("<span id='staging-area-file' data-file='#{file.path()}'>#{file.path()}</span>")
-            # history = $("<span class='icon icon-history'></span>")
+            removeSpan = $("<span class='icon icon-remove-close' id='remove-staging-area-file' data-file='#{file.path()}'></span>")
             diffSpan = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{file.path()}' data-in-working-tree='false'></span>")
             li.append statusSpan
             li.append stageSpan
             li.append fileSpan
-            # li.append history
             if file.inIndex()
               $('#commit-action').addClass 'available'
               stageSpan.addClass 'staged'
@@ -101,6 +122,7 @@ module.exports =
               statusSpan.addClass 'status-added icon-diff-added'
             if file.isModified()
               li.append diffSpan
+              li.append removeSpan
               statusSpan.addClass 'status-modified icon-diff-modified'
             if file.isDeleted()
               statusSpan.addClass 'status-removed icon-diff-removed'
