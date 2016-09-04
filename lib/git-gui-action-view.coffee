@@ -30,3 +30,5 @@ class GitGuiActionView extends View
         @parentView.gitGuiStatusView.setStatuses()
         $('#action-view-close-button').click()
         atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
+        $('#action-view-action-button').empty()
+        $('#action-view-action-button').off 'click'
