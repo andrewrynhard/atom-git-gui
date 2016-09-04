@@ -48,7 +48,7 @@ class GitGuiActionView extends View
         @commitView.hide()
         atom.notifications.addSuccess "Commit successful: #{oid.tostrS()}"
       .catch (error) ->
-        atom.notifications.addError "Push unsuccessful: #{error}"
+        atom.notifications.addError "Commit unsuccessful: #{error}"
 
   openPushAction: ->
     @commitView.hide()
