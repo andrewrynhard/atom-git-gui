@@ -7,14 +7,25 @@ module.exports =
   class GitGuiPushView extends View
     @content: ->
       @div =>
-        @h2 "Remote"
         @div
         @h2 "Username"
         @subview 'userName', new TextEditorView(mini: true)
         @h2 "Password"
         @subview 'userPassword', new TextEditorView(mini: true)
+        @h2 "Remote"
+        @div =>
+          @select class: 'input-select', id: 'remotes-list'
 
     initialize: ->
+      $(document).ready () ->
+        pathToRepo = path.join atom.project.getPaths()[0], '.git'
+        Git.Repository.open pathToRepo
+        .then (repo) ->
+          repo.getRemotes()
+          .then (remotes) ->
+            for remote in remotes
+              option = "<option value=#{remote}>#{remote}</option>"
+              $('#remotes-list').append $(option)
 
     destroy: ->
 
@@ -28,7 +39,7 @@ module.exports =
           .then (repo) ->
             repo.getCurrentBranch()
             .then (ref) ->
-              Git.Remote.lookup repo, 'origin'
+              Git.Remote.lookup repo, $('#remotes-list').val()
               .then (remote) ->
                 remote.push(["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
                   {
