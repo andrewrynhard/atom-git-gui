@@ -32,11 +32,11 @@ module.exports =
             if ref.isRemote()
               continue
 
-            option = "<option value=#{ref}>#{ref.shorthand()}</option>"
+            option = "<option value=#{ref.name()}>#{ref.shorthand()}</option>"
             $('#git-gui-branch-list').append $(option)
 
             if ref.isHead()
-              $('#git-gui-branch-list').val(ref.shorthand())
+              $('#git-gui-branch-list').val(ref.name())
       .catch (error) ->
         console.log error
 
@@ -44,6 +44,11 @@ module.exports =
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) ->
-        repo.checkoutRef $('#git-gui-branch-list').val()
+        repo.getReference $('#git-gui-branch-list').val()
+        .then (ref) ->
+          checkoutOptions = new CheckoutOptions()
+          repo.checkoutBranch ref, checkoutOptions
+          .then () ->
+            console.log 'yes'
       .catch (error) ->
         console.log error
