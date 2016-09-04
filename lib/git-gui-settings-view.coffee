@@ -3,6 +3,7 @@ GitGuiMenuView = require './git-gui-settings-menu-view'
 GitGuiRepoView = require './git-gui-repo-view'
 GitGuiConfigView = require './git-gui-config-view'
 
+# TODO:
 module.exports =
   class GitGuiSettingsView extends View
     @content: ->

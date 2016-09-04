@@ -1,10 +1,6 @@
 path = require 'path'
-fs = require 'fs'
-openpgp = require 'openpgp'
 Git = require 'nodegit'
 {$, View} = require 'space-pen'
-{TextEditorView} = require 'atom-space-pen-views'
-{CompositeDisposable} = require 'atom'
 
 module.exports =
   class GitGuiRepoView extends View
@@ -37,6 +33,7 @@ module.exports =
 
             if ref.isHead()
               $('#git-gui-branch-list').val(ref.name())
+              @currentBranch = ref.name()
       .catch (error) ->
         console.log error
 
@@ -49,6 +46,8 @@ module.exports =
           checkoutOptions = new Git.CheckoutOptions()
           repo.checkoutBranch ref, checkoutOptions
           .then () ->
-            console.log 'yes'
+            @currentBranch = ref.name()
       .catch (error) ->
         console.log error
+        atom.notifications.addError "Branch checkout unsuccessful: #{error}"
+        $('#git-gui-branch-list').val(@currentBranch)
