@@ -41,12 +41,13 @@ module.exports =
             .then (ref) ->
               Git.Remote.lookup repo, $('#git-gui-remotes-list').val()
               .then (remote) ->
-                remote.push(["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
-                  {
+                remote.push ["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
                     callbacks:
                       credentials: () ->
                         return Git.Cred.userpassPlaintextNew username, password
-                  } )
+                      transferProgress: (stats) ->
+                        console.log stats
+                        console.log("transfer progress")
                 .then () ->
                   return resolve()
           .catch (error) ->
