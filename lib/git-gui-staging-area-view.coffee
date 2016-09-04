@@ -49,51 +49,21 @@ module.exports =
           filename = $(e.target).data("file")
           pathToRepo = path.join atom.project.getPaths()[0], '.git'
           Git.Repository.open pathToRepo
-          .then (repo) ->
+          .then (repo) =>
             repo.getHeadCommit()
-            .then (commit) ->
+            .then (commit) =>
               repo.getTree(commit.treeId())
-              .then (tree) ->
+              .then (tree) =>
                 repo.refreshIndex()
-                .then (index) ->
+                .then (index) =>
                   if $(e.target).data("in-working-tree")
                     Git.Diff.treeToWorkdir(repo, tree, index, null)
-                    .then (diff) ->
-                      diff.patches()
-                      .then (patches) ->
-                        for patch in patches
-                          if patch.newFile().path() != filename
-                            continue
-                          patch.hunks()
-                          .then (hunks) ->
-                            for hunk in hunks
-                              hunk.lines()
-                              .then (lines) ->
-                                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
-                                text += hunk.header()
-                                for line in lines
-                                  text += String.fromCharCode(line.origin()) + line.content()
-                                $('#diff-text').text text
-                                $('.git-gui-overlay').addClass 'fade-and-blur'
+                    .then (diff) =>
+                      @setDiffText filename, diff
                   else
                     Git.Diff.treeToIndex(repo, tree, index, null)
-                    .then (diff) ->
-                      diff.patches()
-                      .then (patches) ->
-                        for patch in patches
-                          if patch.newFile().path() != filename
-                            continue
-                          patch.hunks()
-                          .then (hunks) ->
-                            for hunk in hunks
-                              hunk.lines()
-                              .then (lines) ->
-                                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
-                                text += hunk.header()
-                                for line in lines
-                                  text += String.fromCharCode(line.origin()) + line.content()
-                                $('#diff-text').text text
-                                $('.git-gui-overlay').addClass 'fade-and-blur'
+                    .then (diff) =>
+                      @setDiffText filename, diff
           .catch (error) ->
             console.log error
 
@@ -152,3 +122,22 @@ module.exports =
             $('#status-list').append li
       .catch (error) ->
         console.log error
+
+    setDiffText: (filename, diff) ->
+      $('#diff-text').empty()
+      diff.patches()
+      .then (patches) ->
+        for patch in patches
+          if patch.newFile().path() != filename
+            continue
+          patch.hunks()
+          .then (hunks) ->
+            for hunk in hunks
+              hunk.lines()
+              .then (lines) ->
+                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
+                text += hunk.header()
+                for line in lines
+                  text += String.fromCharCode(line.origin()) + line.content()
+                $('#diff-text').append text
+            $('.git-gui-overlay').addClass 'fade-and-blur'
