@@ -66,7 +66,7 @@ module.exports =
 
     destroy: ->
 
-    updatePullAction: ->
+    updateActionBar: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) ->
