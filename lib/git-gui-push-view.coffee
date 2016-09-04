@@ -19,8 +19,8 @@ module.exports =
     destroy: ->
 
     push: () ->
-      username = @pushView.userName.getText()
-      password = @pushView.userPassword.getText()
+      username = @userName.getText()
+      password = @userPassword.getText()
       promise = new Promise (resolve, reject) ->
         $(document).ready ->
           pathToRepo = path.join atom.project.getPaths()[0], '.git'
