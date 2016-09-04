@@ -70,19 +70,21 @@ module.exports =
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) ->
-        Git.Reference.nameToId repo, 'refs/heads/master'
-        .then (local) ->
-          Git.Reference.nameToId repo, 'refs/remotes/origin/master'
-          .then (upstream) ->
-            Git.Graph.aheadBehind(repo, local, upstream)
-            .then (aheadbehind) ->
-              if aheadbehind.ahead
-                $('#push-action').addClass 'available'
-              else
-                $('#push-action').removeClass 'available'
-              if aheadbehind.behind
-                $('#pull-action').addClass 'available'
-              else
-                $('#pull-action').removeClass 'available'
+        repo.getCurrentBranch()
+        .then (ref) ->
+          Git.Reference.nameToId repo, "refs/heads/#{ref.shorthand()}"
+          .then (local) ->
+            Git.Reference.nameToId repo, "refs/remotes/origin/#{ref.shorthand()}"
+            .then (upstream) ->
+              Git.Graph.aheadBehind(repo, local, upstream)
+              .then (aheadbehind) ->
+                if aheadbehind.ahead
+                  $('#push-action').addClass 'available'
+                else
+                  $('#push-action').removeClass 'available'
+                if aheadbehind.behind
+                  $('#pull-action').addClass 'available'
+                else
+                  $('#pull-action').removeClass 'available'
       .catch (error) ->
         console.log error
