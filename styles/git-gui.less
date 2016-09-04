@@ -66,6 +66,10 @@ atom-workspace-axis.horizontal {
     height: 100%;
     padding-left: 7px;
     padding-right: 7px;
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 1;
+    -webkit-filter: blur(0px);
+    transition: 0.22s;
 }
 
 .git-gui-diff-view {
@@ -89,17 +93,10 @@ atom-workspace-axis.horizontal {
 }
 
 .git-gui-overlay {
+    height: 100%;
     -webkit-transition: opacity 0.22s ease;
     opacity: 1;
     -webkit-filter: blur(0px);
-    transition: 0.22s;
-    height: 100%;
-}
-
-.git-gui-overlay.fade-and-blur {
-    -webkit-transition: opacity 0.22s ease;
-    opacity: 0.2;
-    -webkit-filter: blur(2px);
     transition: 0.22s;
 }
 
@@ -182,21 +179,17 @@ atom-workspace-axis.horizontal {
 
 #status-list {
     height: 100%;
-    -webkit-transition: opacity 0.22s ease;
-    opacity: 1;
-    -webkit-filter: blur(0px);
-    transition: 0.22s;
-}
-
-#status-list.fade-and-blur {
-    -webkit-transition: opacity 0.22s ease;
-    opacity: 0.2;
-    -webkit-filter: blur(2px);
-    transition: 0.22s;
 }
 
 #user-signing-key {
     width: 100%;
+}
+
+.fade-and-blur {
+    -webkit-transition: opacity 0.22s ease;
+    opacity: 0.2;
+    -webkit-filter: blur(2px);
+    transition: 0.22s;
 }
 // TODO: Extract the common code for the following, and make it a class
 
