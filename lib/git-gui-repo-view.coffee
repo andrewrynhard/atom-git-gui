@@ -46,7 +46,7 @@ module.exports =
       .then (repo) ->
         repo.getReference $('#git-gui-branch-list').val()
         .then (ref) ->
-          checkoutOptions = new CheckoutOptions()
+          checkoutOptions = new Git.CheckoutOptions()
           repo.checkoutBranch ref, checkoutOptions
           .then () ->
             console.log 'yes'
