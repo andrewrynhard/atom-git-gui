@@ -1,3 +1,5 @@
+path = require 'path'
+Git = require 'nodegit'
 {$, View} = require 'space-pen'
 
 module.exports =
@@ -63,3 +65,18 @@ module.exports =
     serialize: ->
 
     destroy: ->
+
+    updatePullAction: ->
+      pathToRepo = path.join atom.project.getPaths()[0], '.git'
+      Git.Repository.open pathToRepo
+      .then (repo) ->
+        Git.Reference.lookup repo, 'refs/heads/master'
+        .then (local) ->
+          Git.Reference.lookup repo, 'refs/remotes/origin/master'
+          .then (upstream) ->
+            Git.Graph.aheadBehind(repo, local, upstream)
+            .then (aheadbehind) ->
+              if aheadbehind.ahead > 0 || aheadbehind.behind > 0
+                console.log 'yes'
+      .catch (error) ->
+        console.log error

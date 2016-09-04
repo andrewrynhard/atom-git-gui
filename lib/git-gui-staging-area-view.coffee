@@ -71,6 +71,7 @@ module.exports =
     destroy: ->
 
     setStatuses: ->
+      @parentView.gitGuiActionBarView.updatePullAction()
       $('#status-list').empty()
       $('#commit-action').removeClass 'available'
 
