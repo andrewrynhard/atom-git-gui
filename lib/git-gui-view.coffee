@@ -52,6 +52,8 @@ module.exports =
     updateAll: ->
       @gitGuiActionBarView.updateActionBar()
       @gitGuiStagingAreaView.updateStatuses()
+      @gitGuiSettingsView.gitGuiRepoView.updateBranches()
+      @gitGuiSettingsView.gitGuiConfigView.updateConfig()
 
     open: ->
       if $('.git-gui').hasClass 'open'

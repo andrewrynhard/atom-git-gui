@@ -21,10 +21,9 @@ module.exports =
 
     initialize: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
-      @updateAll()
       fs.watch pathToRepo, (event, filename) =>
         if filename == 'config'
-          @updateAll()
+          @updateConfig()
 
       @subscriptions = new CompositeDisposable
 
@@ -44,7 +43,7 @@ module.exports =
     # TODO: Get the global config settings as a default.
     # TODO: Avoid having to export keys to 'secring.asc'
     # TODO: List only the keys that are associated with the active `user.email`
-    updateAll: ->
+    updateConfig: ->
       $(document).ready () =>
         # Clear the `select` menu
         $('#git-gui-user-signingkey-list').find('option').remove().end()
