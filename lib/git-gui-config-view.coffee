@@ -21,7 +21,7 @@ module.exports =
 
     initialize: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
-      fs.watch pathToRepo, (event, filename) =>
+      @watchedConfig = fs.watch pathToRepo, (event, filename) =>
         if filename == 'config'
           @updateConfig()
 
@@ -38,6 +38,7 @@ module.exports =
           @saveUserSigningKey()
 
     destroy: ->
+      @watchedConfig.close()
       @subscriptions.dispose()
 
     # TODO: Get the global config settings as a default.
