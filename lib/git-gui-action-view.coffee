@@ -54,21 +54,24 @@ class GitGuiActionView extends View
         atom.notifications.addError "Commit unsuccessful: #{error}"
 
   openPushAction: ->
-    @gitGuiCommitView.hide()
-    @gitGuiPushView.show()
-    $('#action-view-action-button').text 'Push'
-    $('#action-view-action-button').off 'click'
-    $('#action-view-action-button').on 'click', () =>
+    if @gitGuiPushView.userName.model.isEmpty() || @gitGuiPushView.userPassword.model.isEmpty()
+      @gitGuiCommitView.hide()
+      @gitGuiPushView.show()
+      $('#action-view-action-button').text 'Push'
+      $('#action-view-action-button').off 'click'
+      $('#action-view-action-button').on 'click', () =>
+        @gitGuiPushView.push()
+        .then () =>
+          $('#action-view-close-button').click()
+          $('#action-view-action-button').empty()
+          $('#action-view-action-button').off 'click'
+          @gitGuiPushView.hide()
+          @emitter.emit 'did-push'
+          atom.notifications.addSuccess("Push successful")
+        .catch (error) ->
+          atom.notifications.addError "Push unsuccessful: #{error}"
+    else
       @gitGuiPushView.push()
-      .then () =>
-        $('#action-view-close-button').click()
-        $('#action-view-action-button').empty()
-        $('#action-view-action-button').off 'click'
-        @gitGuiPushView.hide()
-        @emitter.emit 'did-push'
-        atom.notifications.addSuccess("Push successful")
-      .catch (error) ->
-        atom.notifications.addError "Push unsuccessful: #{error}"
 
   openSettingsAction: ->
     @gitGuiCommitView.hide()
