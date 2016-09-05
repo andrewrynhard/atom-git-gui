@@ -41,7 +41,10 @@ module.exports =
             .then (ref) ->
               Git.Remote.lookup repo, $('#git-gui-remotes-list').val()
               .then (remote) ->
-                remote.push ["refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"],
+                refSpec = "refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"
+                if @force
+                  refSpec = '+' + refSpec
+                remote.push [refSpec],
                     callbacks:
                       credentials: () ->
                         return Git.Cred.userpassPlaintextNew username, password

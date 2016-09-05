@@ -45,6 +45,10 @@ module.exports =
         $('body').on 'click', '#push-action', () =>
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
           $('#action-view').addClass 'open'
+          if $('#push-action').hasClass('force')
+            @parentView.gitGuiActionView.gitGuiPushView.force = true
+          else
+            @parentView.gitGuiActionView.gitGuiPushView.force = false
           @parentView.gitGuiActionView.openPushAction()
 
         $('body').on 'click', '#pull-action', () ->
