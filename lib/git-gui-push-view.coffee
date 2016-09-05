@@ -44,7 +44,6 @@ module.exports =
                 refSpec = "refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"
                 if force
                   refSpec = '+' + refSpec
-                console.log refSpec
                 remote.push [refSpec],
                     callbacks:
                       credentials: () ->
