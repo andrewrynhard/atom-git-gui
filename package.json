@@ -2,7 +2,7 @@
   "name": "git-gui",
   "main": "./lib/git-gui",
   "version": "0.1.0",
-  "description": "A short description of your package",
+  "description": "A gui for git.",
   "keywords": [],
   "activationCommands": {
     "atom-workspace": "git-gui:toggle"
