@@ -6,7 +6,7 @@ Git = require 'nodegit'
 module.exports =
   class GitGuiCommitView extends View
     @content: ->
-      @div =>
+      @div class: 'action-view-content', =>
         @h2 "Subject"
         @subview 'subjectEditor', new TextEditorView(mini: true)
         @h2 "Body"

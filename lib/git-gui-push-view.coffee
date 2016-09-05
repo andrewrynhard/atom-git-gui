@@ -6,7 +6,7 @@ Git = require 'nodegit'
 module.exports =
   class GitGuiPushView extends View
     @content: ->
-      @div =>
+      @div class: 'action-view-content', =>
         @div
         @h2 "Username"
         @subview 'userName', new TextEditorView(mini: true)
@@ -15,7 +15,6 @@ module.exports =
         @h2 "Remote"
         @div =>
           @select class: 'input-select', id: 'git-gui-remotes-list'
-        @span class: 'loading loading-spinner-tiny inline-block'
 
     initialize: ->
       $(document).ready () ->

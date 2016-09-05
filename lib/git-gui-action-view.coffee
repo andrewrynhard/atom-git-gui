@@ -9,6 +9,8 @@ class GitGuiActionView extends View
     @div id: 'action-view', =>
       @subview 'gitGuiCommitView', new GitGuiCommitView()
       @subview 'gitGuiPushView', new GitGuiPushView()
+      @div class: 'action-progress', id: 'action-progress-indicator', =>
+        @span class: 'loading loading-spinner-small inline-block'
       @div class: 'btn-toolbar', id: 'action-view-btn-group', =>
         @div class: 'btn-group', =>
           @button class: 'btn', id: 'action-view-close-button', 'Close'
@@ -54,6 +56,7 @@ class GitGuiActionView extends View
         atom.notifications.addError "Commit unsuccessful: #{error}"
 
   openPushAction: ->
+    $('#action-progress-indicator').show()
     @gitGuiCommitView.hide()
     @gitGuiPushView.show()
     $('#action-view-action-button').text 'Push'
@@ -66,6 +69,7 @@ class GitGuiActionView extends View
         $('#action-view-action-button').off 'click'
         @gitGuiPushView.hide()
         @emitter.emit 'did-push'
+        $('#action-progress-indicator').hide()
         atom.notifications.addSuccess("Push successful")
       .catch (error) ->
         atom.notifications.addError "Push unsuccessful: #{error}"

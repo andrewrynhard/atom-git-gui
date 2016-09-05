@@ -186,12 +186,23 @@ atom-workspace-axis.horizontal {
     height: 500px;
 }
 
+.action-view-content {
+    flex: 1; // Fill vertically
+}
+
 #action-view-btn-group {
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin-top: auto;
     padding-bottom: 7px;
+}
+
+.action-progress {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    visibility: hidden;
 }
 
 #git-gui-remotes-list {
