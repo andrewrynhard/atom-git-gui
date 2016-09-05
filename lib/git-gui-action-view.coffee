@@ -61,9 +61,9 @@ class GitGuiActionView extends View
     $('#action-view-action-button').text 'Push'
     $('#action-view-action-button').off 'click'
     $('#action-view-action-button').on 'click', () =>
+      $('#action-progress-indicator').css 'visibility', 'visible'
       @gitGuiPushView.push()
       .then () =>
-        $('#action-progress-indicator').css 'visibility', 'visible'
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
