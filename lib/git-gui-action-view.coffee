@@ -54,32 +54,20 @@ class GitGuiActionView extends View
         atom.notifications.addError "Commit unsuccessful: #{error}"
 
   openPushAction: ->
-    if @gitGuiPushView.userName.model.isEmpty() || @gitGuiPushView.userPassword.model.isEmpty()
-      @gitGuiCommitView.hide()
-      @gitGuiPushView.show()
-      $('#action-view-action-button').text 'Push'
-      $('#action-view-action-button').off 'click'
-      $('#action-view-action-button').on 'click', () =>
-        @gitGuiPushView.push()
-        .then () =>
-          $('#action-view-close-button').click()
-          $('#action-view-action-button').empty()
-          $('#action-view-action-button').off 'click'
-          @gitGuiPushView.hide()
-          @emitter.emit 'did-push'
-          atom.notifications.addSuccess("Push successful")
-        .catch (error) ->
-          atom.notifications.addError "Push unsuccessful: #{error}"
-    else
+    @gitGuiCommitView.hide()
+    @gitGuiPushView.show()
+    $('#action-view-action-button').text 'Push'
+    $('#action-view-action-button').off 'click'
+    $('#action-view-action-button').on 'click', () =>
       @gitGuiPushView.push()
       .then () =>
+        $('#action-view-close-button').click()
+        $('#action-view-action-button').empty()
+        $('#action-view-action-button').off 'click'
+        @gitGuiPushView.hide()
         @emitter.emit 'did-push'
         atom.notifications.addSuccess("Push successful")
       .catch (error) ->
-        # TODO: check if auth error
-        # Remove the cached credentials in case of auth error
-        @gitGuiPushView.userName.setText ''
-        @gitGuiPushView.userPassword.setText ''
         atom.notifications.addError "Push unsuccessful: #{error}"
 
   openSettingsAction: ->
