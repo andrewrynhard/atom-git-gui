@@ -45,14 +45,12 @@ module.exports =
     # TODO: Avoid having to export keys to 'secring.asc'
     # TODO: List only the keys that are associated with the active `user.email`
     updateAll: ->
-      $(document).ready () ->
+      $(document).ready () =>
         # Clear the `select` menu
         $('#git-gui-user-signingkey-list').find('option').remove().end()
-        option = '<option disabled selected value> -- select an option -- </option>'
-        $('#git-gui-user-signingkey-list').append $(option)
         home = process.env.HOME
         pubring = path.join(home, '.gnupg', 'secring.asc')
-        fs.readFile pubring, 'utf-8', (err, data) ->
+        fs.readFile pubring, 'utf-8', (err, data) =>
           if (err)
             throw err
           keys = openpgp.key.readArmored(data).keys
@@ -64,30 +62,41 @@ module.exports =
             option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
             $('#git-gui-user-signingkey-list').append $(option)
 
-      pathToRepo = path.join atom.project.getPaths()[0], '.git'
-      Git.Repository.open pathToRepo
-      .then (repo) =>
-        repo.config()
-        .then (config) =>
-          # Get the user name
-          config.getStringBuf 'user.name'
-          .then (buf) =>
-            @userName.setText buf
+          pathToRepo = path.join atom.project.getPaths()[0], '.git'
+          Git.Repository.open pathToRepo
+          .then (repo) =>
+            repo.config()
+            .then (config) =>
+              @setUserName config
+              @setUserEmail config
+              @setUserSigningKey config
+          .catch (error) ->
+            console.log error
 
-          # Get the user email
-          config.getStringBuf 'user.email'
-          .then (buf) =>
-            @userEmail.setText buf
-
-          # Get the user signingkey
-          config.getStringBuf 'user.signingkey'
-          .then (buf) ->
-            $('#git-gui-user-signingkey-list').val(buf)
-          .catch () ->
-            $('#git-gui-user-signingkey-list').selectedIndex = - 1
+    setUserName: (config) ->
+      # Get the user name
+      config.getStringBuf 'user.name'
+      .then (buf) =>
+        @userName.setText buf
       .catch (error) ->
         console.log error
 
+    setUserEmail: (config) ->
+      # Get the user email
+      config.getStringBuf 'user.email'
+      .then (buf) =>
+        @userEmail.setText buf
+      .catch (error) ->
+        console.log error
+
+    setUserSigningKey: (config) ->
+      # Get the user signingkey
+      config.getStringBuf 'user.signingkey'
+      .then (buf) ->
+        $('#git-gui-user-signingkey-list').val(buf)
+      .catch () ->
+        option = '<option disabled selected value> -- select a signing key -- </option>'
+        $('#git-gui-user-signingkey-list').append $(option)
 
     saveUserName: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
