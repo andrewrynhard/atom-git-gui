@@ -72,6 +72,15 @@ class GitGuiActionView extends View
           atom.notifications.addError "Push unsuccessful: #{error}"
     else
       @gitGuiPushView.push()
+      .then () =>
+        @emitter.emit 'did-push'
+        atom.notifications.addSuccess("Push successful")
+      .catch (error) ->
+        # TODO: check if auth error
+        # Remove the cached credentials in case of auth error
+        @gitGuiPushView.userName.setText ''
+        @gitGuiPushView.userPassword.setText ''
+        atom.notifications.addError "Push unsuccessful: #{error}"
 
   openSettingsAction: ->
     @gitGuiCommitView.hide()
