@@ -10,7 +10,7 @@
   "repository": "https://github.com/andrewrynhard/atom-git-gui",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.0.0 <2.0.0"
+    "atom": ">=1.10.0 <2.0.0"
   },
   "dependencies": {
     "nodegit": "^0.15",
