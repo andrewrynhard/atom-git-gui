@@ -10,9 +10,12 @@ module.exports =
       @div class: 'git-gui-settings', id: 'settings', =>
         @div class: 'git-gui-settings-content', =>
           @subview 'gitGuiSettingsMenu', new GitGuiMenuView()
-          @subview 'gitRepoView', new GitGuiRepoView()
-          @subview 'gitConfigView', new GitGuiConfigView()
+          @subview 'gitGuiRepoView', new GitGuiRepoView()
+          @subview 'gitGuiConfigView', new GitGuiConfigView()
 
     initialize: ->
 
     destroy: ->
+      @gitGuiSettingsMenu.destroy()
+      @gitGuiRepoView.destroy()
+      @gitGuiConfigView.destroy()

@@ -11,10 +11,10 @@ module.exports =
     @content: ->
       @div class: 'git-gui', =>
         @subview 'gitGuiDiffView', new GitGuiDiffView()
-        @subview 'settingsView', new GitGuiSettingsView()
+        @subview 'gitGuiSettingsView', new GitGuiSettingsView()
         @div class: 'git-gui-overlay', =>
           @subview 'gitGuiActionBarView', new GitGuiActionBarView()
-          @subview 'gitGuiStatusView', new GitGuiStagingAreaView()
+          @subview 'gitGuiStagingAreaView', new GitGuiStagingAreaView()
 
     initialize: ->
       @subscriptions = new CompositeDisposable
@@ -44,25 +44,24 @@ module.exports =
     destroy: ->
       @gitGuiActionBarView.destroy()
       @gitGuiActionView.destroy()
-      @gitGuiStatusView.destroy()
+      @gitGuiStagingAreaView.destroy()
+      @gitGuiSettingsView.destroy()
       @gitGuiDiffView.destroy()
       @subscriptions.dispose()
 
     updateAll: ->
       @gitGuiActionBarView.updateActionBar()
-      @gitGuiStatusView.updateStatuses()
+      @gitGuiStagingAreaView.updateStatuses()
 
     open: ->
       if $('.git-gui').hasClass 'open'
         return
-
       @updateAll()
       $('.git-gui').addClass 'open'
 
     close: ->
       if ! $('.git-gui').hasClass 'open'
         return
-
       $('.git-gui').removeClass 'open'
 
     isOpen: ->
