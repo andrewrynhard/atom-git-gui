@@ -1,9 +1,11 @@
 {
   "name": "git-gui",
   "main": "./lib/git-gui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A gui for git.",
-  "keywords": ["git"],
+  "keywords": [
+    "git"
+  ],
   "activationCommands": {
     "atom-workspace": "git-gui:toggle"
   },
