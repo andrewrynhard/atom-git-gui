@@ -29,14 +29,22 @@ module.exports =
           patch.hunks()
           .then (hunks) ->
             for hunk in hunks
+              hunkDiv = $("<div class='git-gui-diff-view-hunk'></div>")
               hunk.lines()
               .then (lines) ->
-                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
-                text += hunk.header()
+                hunkDivText = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
+                hunkDivText += hunk.header()
+                $(hunkDiv).text hunkDivText
                 for line in lines
+                  hunkLine = $("<div class='git-gui-diff-view-hunk-line'></div>")
+                  hunkLineText = String.fromCharCode(line.origin()) + line.content()
+                  $(hunkLine).text hunkLineText
                   if String.fromCharCode(line.origin()) == '+'
-                    console.log '+'
+                    $(hunkLine).addClass 'status status-added'
                   if String.fromCharCode(line.origin()) == '-'
-                    console.log '-'
-                  text += String.fromCharCode(line.origin()) + line.content()
-                $('#diff-text').append text
+                    $(hunkLine).addClass 'status status-removed'
+                  $(hunkDiv).append hunkLine
+              .done () ->
+                $('#diff-text').append hunkDiv
+      .catch (error) ->
+        console.log error
