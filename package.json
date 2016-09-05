@@ -3,7 +3,7 @@
   "main": "./lib/git-gui",
   "version": "0.1.1",
   "description": "A gui for git.",
-  "keywords": [],
+  "keywords": ["git"],
   "activationCommands": {
     "atom-workspace": "git-gui:toggle"
   },
