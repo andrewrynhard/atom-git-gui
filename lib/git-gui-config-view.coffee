@@ -21,10 +21,10 @@ module.exports =
 
     initialize: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
-      @addConfig()
+      @updateAll()
       fs.watch pathToRepo, (event, filename) =>
         if filename == 'config'
-          @addConfig()
+          @updateAll()
 
       @subscriptions = new CompositeDisposable
 
@@ -42,7 +42,28 @@ module.exports =
       @subscriptions.dispose()
 
     # TODO: Get the global config settings as a default.
-    addConfig: ->
+    # TODO: Avoid having to export keys to 'secring.asc'
+    # TODO: List only the keys that are associated with the active `user.email`
+    updateAll: ->
+      $(document).ready () ->
+        # Clear the `select` menu
+        $('#git-gui-user-signingkey-list').find('option').remove().end()
+        option = '<option disabled selected value> -- select an option -- </option>'
+        $('#git-gui-user-signingkey-list').append $(option)
+        home = process.env.HOME
+        pubring = path.join(home, '.gnupg', 'secring.asc')
+        fs.readFile pubring, 'utf-8', (err, data) ->
+          if (err)
+            throw err
+          keys = openpgp.key.readArmored(data).keys
+          for key in keys
+            userid = key.getPrimaryUser().user.userId.userid
+            userid = userid.replace(/</g, '&lt')
+            userid = userid.replace(/>/g, '&gt')
+            keyid = key.primaryKey.getKeyId().toHex()
+            option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
+            $('#git-gui-user-signingkey-list').append $(option)
+
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) =>
@@ -51,23 +72,22 @@ module.exports =
           # Get the user name
           config.getStringBuf 'user.name'
           .then (buf) =>
-            @addUserName buf
+            @userName.setText buf
 
           # Get the user email
           config.getStringBuf 'user.email'
           .then (buf) =>
-            @addUserEmail buf
+            @userEmail.setText buf
 
           # Get the user signingkey
           config.getStringBuf 'user.signingkey'
-          .then (buf) =>
-            @addUserSigningKey buf
-
+          .then (buf) ->
+            $('#git-gui-user-signingkey-list').val(buf)
+          .catch () ->
+            $('#git-gui-user-signingkey-list').selectedIndex = - 1
       .catch (error) ->
         console.log error
 
-    addUserName: (name) ->
-      @userName.setText name
 
     saveUserName: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
@@ -82,9 +102,6 @@ module.exports =
       .catch (error) ->
         console.log error
 
-    addUserEmail: (email) ->
-      @userEmail.setText email
-
     saveUserEmail: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
@@ -95,29 +112,6 @@ module.exports =
           config.setString 'user.email', @userEmail.getText()
       .catch (error) ->
         console.log error
-
-    # TODO: Avoid having to export keys to 'secring.asc'
-    # TODO: List only the keys that are associated with the active `user.email`
-    addUserSigningKey: (signingkey) ->
-      $(document).ready () ->
-        # Clear the `select` menu
-        $('#git-gui-user-signingkey-list').find('option').remove().end()
-        home = process.env.HOME
-        pubring = path.join(home, '.gnupg', 'secring.asc')
-        fs.readFile pubring, 'utf-8', (err, data) ->
-          if (err)
-            throw err
-          keys = openpgp.key.readArmored(data).keys
-          for key in keys
-            userid = key.getPrimaryUser().user.userId.userid
-            userid = userid.replace(/</g, '&lt')
-            userid = userid.replace(/>/g, '&gt')
-            keyid = key.primaryKey.getKeyId().toHex()
-            option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
-            $('#git-gui-user-signingkey-list').append $(option)
-            # Select the active signing key
-            if keyid == signingkey
-              $('#git-gui-user-signingkey-list').val(keyid)
 
     saveUserSigningKey: ->
       pathToRepo = path.join atom.project.getPaths()[0], '.git'
@@ -130,6 +124,5 @@ module.exports =
           .then () ->
             # Ensure that commits are signed
             config.setString 'commit.gpgsign', 'true'
-
       .catch (error) ->
         console.log error
