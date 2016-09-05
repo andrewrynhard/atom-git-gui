@@ -1,4 +1,4 @@
-# git-gui package
+# Git Gui
 
 A gui for git.
 
