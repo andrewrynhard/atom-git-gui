@@ -43,8 +43,9 @@ module.exports =
             console.log error
 
         $('#status-list').on 'click', '#staging-area-file-diff', (e) =>
-          $('.git-gui-diff-view').toggleClass 'open'
+          $('.git-gui-overlay').addClass 'fade-and-blur'
           $('.git-gui.open').toggleClass 'expanded'
+          $('.git-gui-diff-view').toggleClass 'open'
           filename = $(e.target).data("file")
           pathToRepo = path.join atom.project.getPaths()[0], '.git'
           Git.Repository.open pathToRepo
@@ -58,11 +59,11 @@ module.exports =
                   if $(e.target).data("in-working-tree")
                     Git.Diff.treeToWorkdir(repo, tree, index, null)
                     .then (diff) =>
-                      @setDiffText filename, diff
+                      @parentView.gitGuiDiffView.setDiffText filename, diff
                   else
                     Git.Diff.treeToIndex(repo, tree, index, null)
                     .then (diff) =>
-                      @setDiffText filename, diff
+                      @parentView.gitGuiDiffView.setDiffText filename, diff
           .catch (error) ->
             console.log error
 
@@ -133,22 +134,3 @@ module.exports =
             $('#status-list').append li
       .catch (error) ->
         console.log error
-
-    setDiffText: (filename, diff) ->
-      $('#diff-text').empty()
-      diff.patches()
-      .then (patches) ->
-        for patch in patches
-          if patch.newFile().path() != filename
-            continue
-          patch.hunks()
-          .then (hunks) ->
-            for hunk in hunks
-              hunk.lines()
-              .then (lines) ->
-                text = 'diff ' + patch.oldFile().path() + ' ' + patch.newFile().path() + '\n'
-                text += hunk.header()
-                for line in lines
-                  text += String.fromCharCode(line.origin()) + line.content()
-                $('#diff-text').append text
-            $('.git-gui-overlay').addClass 'fade-and-blur'
