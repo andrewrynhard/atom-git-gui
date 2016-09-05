@@ -22,7 +22,7 @@ module.exports =
               if $("[id='status-for-#{path.basename filename}']").hasClass 'staged'
                 $("[id='status-for-#{path.basename filename}']").removeClass 'staged'
                 repo.getHeadCommit()
-                .then (commit) ->
+                .then (commit) =>
                   Git.Reset.default repo, commit, filename
                   .then () =>
                     index.write()
