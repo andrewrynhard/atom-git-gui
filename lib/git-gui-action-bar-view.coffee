@@ -85,4 +85,6 @@ module.exports =
                 else
                   $('#pull-action').removeClass 'available'
       .catch (error) ->
+        # TODO: Add the ability to set remote refs.
+        atom.notifications.addError "#{error}"
         console.log error
