@@ -55,14 +55,14 @@ class GitGuiActionView extends View
       .catch (error) ->
         atom.notifications.addError "Commit unsuccessful: #{error}"
 
-  openPushAction: ->
+  openPushAction: (force) ->
     @gitGuiCommitView.hide()
     @gitGuiPushView.show()
     $('#action-view-action-button').text 'Push'
     $('#action-view-action-button').off 'click'
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
-      @gitGuiPushView.push()
+      @gitGuiPushView.push(force)
       .then () =>
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()

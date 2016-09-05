@@ -29,7 +29,7 @@ module.exports =
 
     destroy: ->
 
-    push: () ->
+    push: (force) ->
       username = @userName.getText()
       password = @userPassword.getText()
       promise = new Promise (resolve, reject) ->
@@ -42,8 +42,9 @@ module.exports =
               Git.Remote.lookup repo, $('#git-gui-remotes-list').val()
               .then (remote) ->
                 refSpec = "refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"
-                if @force
+                if force
                   refSpec = '+' + refSpec
+                console.log refSpec
                 remote.push [refSpec],
                     callbacks:
                       credentials: () ->

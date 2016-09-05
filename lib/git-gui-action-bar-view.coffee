@@ -43,13 +43,21 @@ module.exports =
           @parentView.gitGuiActionView.openCommitAction()
 
         $('body').on 'click', '#push-action', () =>
-          $('atom-workspace-axis.horizontal').toggleClass 'blur'
-          $('#action-view').addClass 'open'
           if $('#push-action').hasClass('force')
-            @parentView.gitGuiActionView.gitGuiPushView.force = true
+            atom.confirm
+              message: "Force push?"
+              detailedMessage: "This will overwrite changes to the remote."
+              buttons:
+                Ok: =>
+                  $('atom-workspace-axis.horizontal').toggleClass 'blur'
+                  $('#action-view').addClass 'open'
+                  @parentView.gitGuiActionView.openPushAction(true)
+                Cancel: ->
+                  return
           else
-            @parentView.gitGuiActionView.gitGuiPushView.force = false
-          @parentView.gitGuiActionView.openPushAction()
+            $('atom-workspace-axis.horizontal').toggleClass 'blur'
+            $('#action-view').addClass 'open'
+            @parentView.gitGuiActionView.openPushAction(false)
 
         $('body').on 'click', '#pull-action', () ->
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
