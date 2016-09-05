@@ -4,7 +4,7 @@ module.exports =
   class GitGuiDiffView extends View
     @content: ->
       @div class: 'git-gui-diff-view', =>
-        @button click: 'close', 'Close'
+        @button class: 'btn', click: 'close', 'Close'
         @div id: 'diff-text'
 
     initialize: ->
