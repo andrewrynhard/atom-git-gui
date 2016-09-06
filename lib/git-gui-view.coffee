@@ -44,10 +44,7 @@ class GitGuiView extends View
         .on 'change', (path) =>
           @gitGuiStagingAreaView.updateStatus path
 
-        @gitGuiStagingAreaView.updateStatuses()
-
-        pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
-        @gitGuiActionView.gitGuiPushView.updateRemotes(pathToRepo)
+        @updateAll()
 
     @subscriptions = new CompositeDisposable
 
@@ -85,9 +82,11 @@ class GitGuiView extends View
   # TODO: This is the only time that the repo and config views are updated,
   #       they need a more dynamic way of updating.
   updateAll: ->
+    pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
     @gitGuiStagingAreaView.updateStatuses()
-    @gitGuiSettingsView.gitGuiRepoView.updateBranches()
-    @gitGuiSettingsView.gitGuiConfigView.updateConfig()
+    @gitGuiSettingsView.gitGuiRepoView.updateBranches(pathToRepo)
+    @gitGuiSettingsView.gitGuiConfigView.updateConfig(pathToRepo)
+    @gitGuiActionView.gitGuiPushView.updateRemotes(pathToRepo)
 
   open: ->
     if $('.git-gui').hasClass 'open'

@@ -16,11 +16,10 @@ class GitGuiRepoView extends View
 
   destroy: ->
 
-  updateBranches: ->
+  updateBranches: (pathToRepo) ->
     $(document).ready () ->
       # Clear the `select` menu
       $('#git-gui-branch-list').find('option').remove().end()
-      pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) ->
         repo.getReferences(Git.Reference.TYPE.LISTALL)

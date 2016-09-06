@@ -22,7 +22,7 @@ class GitGuiConfigView extends View
     pathToRepo = path.join atom.project.getPaths()[0], '.git'
     @watchedConfig = fs.watch pathToRepo, (event, filename) =>
       if filename == 'config'
-        @updateConfig()
+        @updateConfig(pathToRepo)
 
     @subscriptions = new CompositeDisposable
 
@@ -43,7 +43,7 @@ class GitGuiConfigView extends View
   # TODO: Get the global config settings as a default.
   # TODO: Avoid having to export keys to 'secring.asc'
   # TODO: List only the keys that are associated with the active `user.email`
-  updateConfig: ->
+  updateConfig: (pathToRepo) ->
     $(document).ready () =>
       # Clear the `select` menu
       $('#git-gui-user-signingkey-list').find('option').remove().end()
@@ -61,7 +61,6 @@ class GitGuiConfigView extends View
           option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
           $('#git-gui-user-signingkey-list').append $(option)
 
-        pathToRepo = path.join atom.project.getPaths()[0], '.git'
         Git.Repository.open pathToRepo
         .then (repo) =>
           repo.config()
