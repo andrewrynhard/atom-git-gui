@@ -27,6 +27,12 @@ class GitGuiStagingAreaView extends View
                 .then () =>
                   index.write()
                   @updateStatus filename
+            # Remove the file
+            else if $(e.target).data 'removed'
+              index.removeByPath filename
+              .then () =>
+                index.write()
+                @updateStatus filename
             # Add the file to the index
             else
               index.addByPath filename
@@ -50,7 +56,7 @@ class GitGuiStagingAreaView extends View
             .then (tree) =>
               repo.refreshIndex()
               .then (index) =>
-                if $(e.target).data("staged")
+                if $(e.target).data('staged')
                   Git.Diff.treeToIndex(repo, tree, index, null)
                   .then (diff) =>
                     @parentView.gitGuiDiffView.setDiffText filename, diff
@@ -130,7 +136,7 @@ class GitGuiStagingAreaView extends View
     li = $("<li class='list-item git-gui-status-list-item' id='#{filePath}'></li")
     statusSpan = $("<span class='status icon'></span>")
     indexSpan = $("<span class='status status-added icon icon-check'></span>")
-    fileSpan = $("<span id='staging-area-file' data-file='#{filePath}' data-staged='false'>#{filePath}</span>")
+    fileSpan = $("<span id='staging-area-file' data-file='#{filePath}' data-staged='false' data-removed='false'>#{filePath}</span>")
     removeSpan = $("<span class='icon icon-remove-close' id='staging-area-file-remove' data-file='#{filePath}'></span>")
     diffSpan = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{filePath}' data-staged='false'></span>")
 
@@ -171,7 +177,7 @@ class GitGuiStagingAreaView extends View
       when Git.Status.STATUS.INDEX_NEW + Git.Status.STATUS.WT_DELETED, Git.Status.STATUS.INDEX_MODIFIED + Git.Status.STATUS.WT_DELETED
         li.append diffSpan
         li.append removeSpan
-        $(fileSpan).data 'staged', true
+        $(fileSpan).data 'removed', true
         $(diffSpan).data 'staged', true
         statusSpan.addClass 'status-modified icon-diff-modified'
         indexSpan.removeClass 'icon-check'
@@ -185,6 +191,7 @@ class GitGuiStagingAreaView extends View
         indexSpan.css 'opacity', 1
       when Git.Status.STATUS.WT_DELETED
         statusSpan.addClass 'status-removed icon-diff-removed'
+        $(fileSpan).data 'removed', true
       when Git.Status.STATUS.INDEX_RENAMED
         $(fileSpan).data 'staged', true
         $(diffSpan).data 'staged', true
