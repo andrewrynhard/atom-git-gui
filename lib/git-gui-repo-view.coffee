@@ -18,7 +18,7 @@ module.exports =
     destroy: ->
 
     updateBranches: ->
-      $(document).ready () =>
+      $(document).ready () ->
         # Clear the `select` menu
         $('#git-gui-branch-list').find('option').remove().end()
         pathToRepo = path.join atom.project.getPaths()[0], '.git'
