@@ -18,7 +18,7 @@ module.exports =
 
     initialize: ->
       $(document).ready () ->
-        pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
+        pathToRepo = path.join atom.project.getPaths()[0], '.git'
         Git.Repository.open pathToRepo
         .then (repo) ->
           repo.getRemotes()
