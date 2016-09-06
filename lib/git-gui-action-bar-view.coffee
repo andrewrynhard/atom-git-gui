@@ -84,7 +84,7 @@ module.exports =
         repo.getCurrentBranch()
         .then (ref) ->
           statusOptions = new Git.StatusOptions()
-          statusList = Git.StatusList.create repo, statusOptions
+          Git.StatusList.create repo, statusOptions
           .then (statusList) ->
             do () ->
               $('#commit-action').removeClass 'available'
