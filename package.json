@@ -17,6 +17,7 @@
   "dependencies": {
     "nodegit": "^0.15",
     "openpgp": "^2.3",
+    "chokidar": "^1.6",
     "atom-space-pen-views": "^2.2"
   }
 }

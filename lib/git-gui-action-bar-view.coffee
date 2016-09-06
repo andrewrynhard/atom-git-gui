@@ -74,12 +74,28 @@ module.exports =
 
     destroy: ->
 
-    updateActionBar: ->
-      pathToRepo = path.join atom.project.getPaths()[0], '.git'
+    update: ->
+      pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
       Git.Repository.open pathToRepo
       .then (repo) ->
         repo.getCurrentBranch()
         .then (ref) ->
+          statusOptions = new Git.StatusOptions()
+          statusList = Git.StatusList.create repo, statusOptions
+          .then (statusList) ->
+            do () ->
+              $('#commit-action').removeClass 'available'
+              for i in [0...statusList.entrycount() ]
+                entry = Git.Status.byIndex(statusList, i)
+                status = entry.status()
+                switch status
+                  when Git.Status.STATUS.INDEX_NEW, \
+                       Git.Status.STATUS.INDEX_MODIFIED, \
+                       Git.Status.STATUS.INDEX_NEW + Git.Status.STATUS.INDEX_MODIFIED, \
+                       Git.Status.STATUS.INDEX_DELETED, \
+                       Git.Status.STATUS.INDEX_RENAMED
+                    $('#commit-action').addClass 'available'
+                    return
           Git.Reference.nameToId repo, "refs/heads/#{ref.shorthand()}"
           .then (local) ->
             # TODO: Consider the case when a user wants to get the ahead/behind

@@ -1,3 +1,4 @@
+path = require 'path'
 {CompositeDisposable} = require 'atom'
 {$, View} = require 'space-pen'
 GitGuiActionBarView = require './git-gui-action-bar-view'
@@ -8,30 +9,46 @@ GitGuiSettingsView = require './git-gui-settings-view'
 
 module.exports =
   class GitGuiView extends View
+    gitGuiActionBarView: null
+    gitGuiStagingAreaView: null
+    gitGuiSettingsView: null
+    gitGuiActionView: null
+    gitGuiDiffView: null
+    modalPanel: null
+
     @content: ->
       @div class: 'git-gui', =>
         @subview 'gitGuiDiffView', new GitGuiDiffView()
         @subview 'gitGuiSettingsView', new GitGuiSettingsView()
         @div class: 'git-gui-overlay', =>
           @subview 'gitGuiActionBarView', new GitGuiActionBarView()
+          @div =>
+            @select class: 'input-select', id: 'git-gui-project-list'
           @subview 'gitGuiStagingAreaView', new GitGuiStagingAreaView()
 
     initialize: ->
-      @subscriptions = new CompositeDisposable
-
       @gitGuiActionView = new GitGuiActionView()
+      @gitGuiActionView.parentView = this
       @modalPanel = atom.workspace.addModalPanel
         item: @gitGuiActionView,
         visible: true
-      @gitGuiActionView.parentView = this
 
-      repo = atom.project.getRepositories()[0]
+      # $(document).ready () =>
+      #   $('#git-gui-project-list').on 'change', () =>
+      #     @updateAll()
+      #     @watcher.close()
+      #     @watcher = chokidar.watch($('#git-gui-project-list').val(), null)
+      #     .on 'change', (event, path) =>
+      #       @updateAll()
+      #     $('#git-gui-project-list').val().data('repo')
 
-      @subscriptions.add repo.onDidChangeStatus () =>
-        @updateAll()
+      @subscriptions = new CompositeDisposable
 
-      @subscriptions.add repo.onDidChangeStatuses () =>
-        @updateAll()
+      @subscriptions.add atom.project.onDidChangePaths (projectPaths) =>
+        @updateProjects(projectPaths)
+
+      @subscriptions.add @gitGuiStagingAreaView.onDidUpdateStatus () =>
+        @gitGuiActionBarView.update()
 
       @subscriptions.add @gitGuiActionView.onDidCommit () =>
         @updateAll()
@@ -48,9 +65,18 @@ module.exports =
       @gitGuiSettingsView.destroy()
       @gitGuiDiffView.destroy()
       @subscriptions.dispose()
+      # @watcher.close()
+
+    # TODO: keep the currently selected option
+    updateProjects: (projectPaths) ->
+      $('#git-gui-project-list').find('option').remove().end()
+      for projectPath in projectPaths
+        option = "<option value=#{projectPath} data-repo='#{path.join projectPath, '.git'}'>#{path.basename projectPath}</option>"
+        $('#git-gui-project-list').append option
+      $('#git-gui-project-list').prop('selectedIndex', 0)
 
     updateAll: ->
-      @gitGuiActionBarView.updateActionBar()
+      # @gitGuiActionBarView.updateActionBar()
       @gitGuiStagingAreaView.updateStatuses()
       @gitGuiSettingsView.gitGuiRepoView.updateBranches()
       @gitGuiSettingsView.gitGuiConfigView.updateConfig()
@@ -58,6 +84,7 @@ module.exports =
     open: ->
       if $('.git-gui').hasClass 'open'
         return
+      @updateProjects atom.project.getPaths()
       @updateAll()
       $('.git-gui').addClass 'open'
 
