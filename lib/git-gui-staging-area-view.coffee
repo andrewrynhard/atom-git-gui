@@ -17,6 +17,13 @@ module.exports =
         @updateStatus path
 
       $(document).ready () =>
+        $('#git-gui-project-list').on 'change', () =>
+          @watcher.close()
+          @watcher = chokidar.watch($('#git-gui-project-list').val(), {ignored: /\.git*/} )
+          .on 'change', (path) =>
+            @updateStatus path
+          @updateStatuses()
+
         $('#status-list').on 'click', '#staging-area-file', (e) =>
           filename = $(e.target).data 'file'
           pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')

@@ -33,15 +33,6 @@ module.exports =
         item: @gitGuiActionView,
         visible: true
 
-      # $(document).ready () =>
-      #   $('#git-gui-project-list').on 'change', () =>
-      #     @updateAll()
-      #     @watcher.close()
-      #     @watcher = chokidar.watch($('#git-gui-project-list').val(), null)
-      #     .on 'change', (event, path) =>
-      #       @updateAll()
-      #     $('#git-gui-project-list').val().data('repo')
-
       @subscriptions = new CompositeDisposable
 
       @subscriptions.add atom.project.onDidChangePaths (projectPaths) =>
@@ -76,8 +67,6 @@ module.exports =
       $('#git-gui-project-list').prop('selectedIndex', 0)
 
     updateAll: ->
-      # @gitGuiActionBarView.updateActionBar()
-      @gitGuiStagingAreaView.updateStatuses()
       @gitGuiSettingsView.gitGuiRepoView.updateBranches()
       @gitGuiSettingsView.gitGuiConfigView.updateConfig()
 
