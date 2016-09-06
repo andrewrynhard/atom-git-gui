@@ -1,4 +1,5 @@
 path = require 'path'
+chokidar = require 'chokidar'
 {CompositeDisposable} = require 'atom'
 {$, View} = require 'space-pen'
 GitGuiActionBarView = require './git-gui-action-bar-view'
@@ -32,6 +33,22 @@ class GitGuiView extends View
       item: @gitGuiActionView,
       visible: true
 
+    @watcher = chokidar.watch(atom.project.getPaths()[0], {ignored: /\.git*/} )
+    .on 'change', (path) =>
+      @gitGuiStagingAreaView.updateStatus path
+
+    $(document).ready () =>
+      $('#git-gui-project-list').on 'change', () =>
+        @watcher.close()
+        @watcher = chokidar.watch($('#git-gui-project-list').val(), {ignored: /\.git*/} )
+        .on 'change', (path) =>
+          @gitGuiStagingAreaView.updateStatus path
+
+        @gitGuiStagingAreaView.updateStatuses()
+
+        pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
+        @gitGuiActionView.gitGuiPushView.updateRemotes(pathToRepo)
+
     @subscriptions = new CompositeDisposable
 
     @subscriptions.add atom.project.onDidChangePaths (projectPaths) =>
@@ -55,6 +72,7 @@ class GitGuiView extends View
     @gitGuiSettingsView.destroy()
     @gitGuiDiffView.destroy()
     @subscriptions.dispose()
+    @watcher.close()
 
   # TODO: keep the currently selected option
   updateProjects: (projectPaths) ->

@@ -16,8 +16,13 @@ class GitGuiPushView extends View
         @select class: 'input-select', id: 'git-gui-remotes-list'
 
   initialize: ->
+    pathToRepo = path.join atom.project.getPaths()[0], '.git'
+    @updateRemotes(pathToRepo)
+
+  destroy: ->
+
+  updateRemotes: (pathToRepo) ->
     $(document).ready () ->
-      pathToRepo = path.join atom.project.getPaths()[0], '.git'
       Git.Repository.open pathToRepo
       .then (repo) ->
         repo.getRemotes()
@@ -26,14 +31,12 @@ class GitGuiPushView extends View
             option = "<option value=#{remote}>#{remote}</option>"
             $('#git-gui-remotes-list').append $(option)
 
-  destroy: ->
-
   push: (force) ->
     username = @userName.getText()
     password = @userPassword.getText()
+    pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
     promise = new Promise (resolve, reject) ->
       $(document).ready ->
-        pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
         Git.Repository.open pathToRepo
         .then (repo) ->
           repo.getCurrentBranch()

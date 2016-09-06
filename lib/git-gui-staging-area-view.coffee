@@ -1,5 +1,4 @@
 path = require 'path'
-chokidar = require 'chokidar'
 {$, View} = require 'space-pen'
 Git = require 'nodegit'
 {Emitter} = require 'atom'
@@ -11,18 +10,8 @@ class GitGuiStagingAreaView extends View
 
   initialize: ->
     @emitter = new Emitter
-    @watcher = chokidar.watch(atom.project.getPaths()[0], {ignored: /\.git*/} )
-    .on 'change', (path) =>
-      @updateStatus path
 
     $(document).ready () =>
-      $('#git-gui-project-list').on 'change', () =>
-        @watcher.close()
-        @watcher = chokidar.watch($('#git-gui-project-list').val(), {ignored: /\.git*/} )
-        .on 'change', (path) =>
-          @updateStatus path
-        @updateStatuses()
-
       $('#status-list').on 'click', '#staging-area-file', (e) =>
         filename = $(e.target).data 'file'
         pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
@@ -98,7 +87,6 @@ class GitGuiStagingAreaView extends View
 
   destroy: ->
     @emitter.dispose()
-    @watcher.close()
 
   onDidUpdateStatus: (callback) ->
     @emitter.on 'did-update-status', callback
