@@ -18,7 +18,7 @@ module.exports =
 
     initialize: ->
       $(document).ready () ->
-        pathToRepo = path.join atom.project.getPaths()[0], '.git'
+        pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
         Git.Repository.open pathToRepo
         .then (repo) ->
           repo.getRemotes()
@@ -34,7 +34,7 @@ module.exports =
       password = @userPassword.getText()
       promise = new Promise (resolve, reject) ->
         $(document).ready ->
-          pathToRepo = path.join atom.project.getPaths()[0], '.git'
+          pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
           Git.Repository.open pathToRepo
           .then (repo) ->
             repo.getCurrentBranch()

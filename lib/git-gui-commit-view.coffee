@@ -20,7 +20,7 @@ module.exports =
       promise = new Promise (resolve, reject) =>
         message = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
         $(document).ready ->
-          pathToRepo = path.join atom.project.getPaths()[0], '.git'
+          pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
           Git.Repository.open pathToRepo
           .then (repo) ->
             repo.refreshIndex()
