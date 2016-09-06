@@ -38,6 +38,7 @@ module.exports =
 
         $('body').on 'click', '#commit-action', () =>
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
+          $('#action-view').parent().show()
           $('#action-view').addClass 'open'
           @parentView.gitGuiActionView.openCommitAction()
 
@@ -49,17 +50,20 @@ module.exports =
               buttons:
                 Ok: =>
                   $('atom-workspace-axis.horizontal').toggleClass 'blur'
+                  $('#action-view').parent().show()
                   $('#action-view').addClass 'open'
                   @parentView.gitGuiActionView.openPushAction(true)
                 Cancel: ->
                   return
           else
             $('atom-workspace-axis.horizontal').toggleClass 'blur'
+            $('#action-view').parent().show()
             $('#action-view').addClass 'open'
             @parentView.gitGuiActionView.openPushAction(false)
 
         $('body').on 'click', '#pull-action', () ->
           $('atom-workspace-axis.horizontal').toggleClass 'blur'
+          $('#action-view').parent().show()
           $('#action-view').addClass 'open'
           # @parentView.gitGuiActionView.openPullAction()
 
