@@ -135,9 +135,7 @@ module.exports =
               li = @makeStatusListItem file.path(), status
               if li
                 $('#status-list').append li
-                @emitter.emit 'did-update-status'
-          else
-            return
+          @emitter.emit 'did-update-status'
       .catch (error) ->
         console.log error
 
