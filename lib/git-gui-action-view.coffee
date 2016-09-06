@@ -49,6 +49,7 @@ class GitGuiActionView extends View
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
+        $('#commit-action').removeClass 'available'
         @emitter.emit 'did-commit', oid
         @gitGuiCommitView.hide()
         atom.notifications.addSuccess "Commit successful: #{oid.tostrS()}"
@@ -67,8 +68,9 @@ class GitGuiActionView extends View
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
-        @gitGuiPushView.hide()
+        $('#push-action').removeClass 'available'
         @emitter.emit 'did-push'
+        @gitGuiPushView.hide()
         $('#action-progress-indicator').css 'visibility', 'hidden'
         atom.notifications.addSuccess("Push successful")
       .catch (error) ->
