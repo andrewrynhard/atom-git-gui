@@ -2,4 +2,6 @@
 
 A gui for git.
 
-![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+[![Plugin installs!](https://img.shields.io/apm/dm/git-gui.svg?style=flat-square)](https://atom.io/packages/git-gui)
+[![Package version!](https://img.shields.io/apm/v/git-gui.svg?style=flat-square)](https://atom.io/packages/git-gui)
+[![Build Status](https://travis-ci.org/andrewrynhard/atom-git-gui.svg?branch=master)](https://travis-ci.org/andrewrynhard/atom-git-gui)
