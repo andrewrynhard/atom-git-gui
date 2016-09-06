@@ -56,7 +56,6 @@ module.exports =
       @gitGuiSettingsView.destroy()
       @gitGuiDiffView.destroy()
       @subscriptions.dispose()
-      # @watcher.close()
 
     # TODO: keep the currently selected option
     updateProjects: (projectPaths) ->
@@ -66,7 +65,10 @@ module.exports =
         $('#git-gui-project-list').append option
       $('#git-gui-project-list').prop('selectedIndex', 0)
 
+    # TODO: This is the only time that the repo and config views are updated,
+    #       they need a more dynamic way of updating.
     updateAll: ->
+      @gitGuiStagingAreaView.updateStatuses()
       @gitGuiSettingsView.gitGuiRepoView.updateBranches()
       @gitGuiSettingsView.gitGuiConfigView.updateConfig()
 
