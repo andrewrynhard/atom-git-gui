@@ -3,7 +3,6 @@
 GitGuiCommitView = require './git-gui-commit-view'
 GitGuiPushView = require './git-gui-push-view'
 
-module.exports =
 class GitGuiActionView extends View
   @content: ->
     @div id: 'action-view', =>
@@ -76,3 +75,5 @@ class GitGuiActionView extends View
       .catch (error) ->
         $('#action-progress-indicator').css 'visibility', 'hidden'
         atom.notifications.addError "Push unsuccessful: #{error}"
+
+module.exports = GitGuiActionView
