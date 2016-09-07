@@ -49,17 +49,21 @@ class GitGuiConfigView extends View
       $('#git-gui-user-signingkey-list').find('option').remove().end()
       home = process.env.HOME
       pubring = path.join(home, '.gnupg', 'secring.asc')
-      fs.readFile pubring, 'utf-8', (err, data) =>
-        if (err)
-          throw err
-        keys = openpgp.key.readArmored(data).keys
-        for key in keys
-          userid = key.getPrimaryUser().user.userId.userid
-          userid = userid.replace(/</g, '&lt')
-          userid = userid.replace(/>/g, '&gt')
-          keyid = key.primaryKey.getKeyId().toHex()
-          option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
-          $('#git-gui-user-signingkey-list').append $(option)
+      fs.exists pubring, (exists) =>
+        if exists
+          fs.readFile pubring, 'utf-8', (err, data) ->
+            if (err)
+              throw err
+            keys = openpgp.key.readArmored(data).keys
+            for key in keys
+              userid = key.getPrimaryUser().user.userId.userid
+              userid = userid.replace(/</g, '&lt')
+              userid = userid.replace(/>/g, '&gt')
+              keyid = key.primaryKey.getKeyId().toHex()
+              option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
+              $('#git-gui-user-signingkey-list').append $(option)
+        else
+          $('#git-gui-user-signingkey-list').hide()
 
         Git.Repository.open pathToRepo
         .then (repo) =>
