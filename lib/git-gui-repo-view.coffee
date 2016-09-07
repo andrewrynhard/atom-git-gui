@@ -1,4 +1,3 @@
-path = require 'path'
 Git = require 'nodegit'
 {$, View} = require 'space-pen'
 
@@ -38,7 +37,7 @@ class GitGuiRepoView extends View
         console.log error
 
   changeBranch: ->
-    pathToRepo = path.join atom.project.getPaths()[0], '.git'
+    pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
     Git.Repository.open pathToRepo
     .then (repo) ->
       repo.getReference $('#git-gui-branch-list').val()
