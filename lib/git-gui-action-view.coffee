@@ -22,7 +22,7 @@ class GitGuiActionView extends View
     $(document).ready () ->
       $('body').on 'click', '#action-view-close-button', () ->
         $('atom-workspace-axis.horizontal').toggleClass 'blur'
-        $('#action-view').removeClass 'open'
+        $('#action-view').parent().hide()
 
   serialize: ->
 

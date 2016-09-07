@@ -31,7 +31,7 @@ class GitGuiView extends View
     @gitGuiActionView.parentView = this
     @modalPanel = atom.workspace.addModalPanel
       item: @gitGuiActionView,
-      visible: true
+      visible: false
 
     @watcher = chokidar.watch(atom.project.getPaths()[0], {ignored: /\.git*/} )
     .on 'change', (path) =>
