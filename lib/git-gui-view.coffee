@@ -45,6 +45,7 @@ class GitGuiView extends View
           @gitGuiStagingAreaView.updateStatus path
 
         @updateAll()
+        @selectedProject = $('#git-gui-project-list').val()
 
     @subscriptions = new CompositeDisposable
 
@@ -77,7 +78,11 @@ class GitGuiView extends View
     for projectPath in projectPaths
       option = "<option value=#{projectPath} data-repo='#{path.join projectPath, '.git'}'>#{path.basename projectPath}</option>"
       $('#git-gui-project-list').append option
-    $('#git-gui-project-list').prop('selectedIndex', 0)
+    if @selectedProject and @selectedProject in atom.project.getPaths()
+      $('#git-gui-project-list').val(@selectedProject)
+    else
+      $('#git-gui-project-list').prop('selectedIndex', 0)
+      @selectedProject = $('#git-gui-project-list').val()
 
   # TODO: This is the only time that the repo and config views are updated,
   #       they need a more dynamic way of updating.
