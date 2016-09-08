@@ -1,6 +1,7 @@
 Git = require 'nodegit'
 {$, View} = require 'space-pen'
 
+# TODO: Add the ability to set remote refs.
 class GitGuiRepoView extends View
   @content: ->
     @div class: 'git-gui-settings-subview', id: 'repo-view', =>
