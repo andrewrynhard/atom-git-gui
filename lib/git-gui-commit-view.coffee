@@ -58,7 +58,7 @@ class GitGuiCommitView extends View
       fs.exists commitMsgHook, (exists) ->
         if exists
           child_process.exec "#{commitMsgHook} #{commitEditMsg}", {env: process.env} , (error, stdout, stderr) ->
-            if error then return reject error
+            if error then return reject stdout
             if stderr then return reject stdout
             return resolve()
         else
