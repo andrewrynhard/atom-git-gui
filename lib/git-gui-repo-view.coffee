@@ -47,10 +47,10 @@ class GitGuiRepoView extends View
         repo.checkoutBranch ref, checkoutOptions
         .then () ->
           @currentBranch = ref.name()
-          atom.notifications.addSuccess "Branch checkout successful:", {detail: @currentBranch }
+          atom.notifications.addSuccess "Branch checkout successful:", {description: @currentBranch }
     .catch (error) ->
       console.log error
-      atom.notifications.addError "Branch checkout unsuccessful:", {detail: error}
+      atom.notifications.addError "Branch checkout unsuccessful:", {description: error}
       $('#git-gui-branch-list').val(@currentBranch)
 
 module.exports = GitGuiRepoView
