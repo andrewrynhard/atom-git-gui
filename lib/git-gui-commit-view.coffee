@@ -26,17 +26,21 @@ class GitGuiCommitView extends View
           .then (index) ->
             index.writeTree()
             .then (oid) ->
-              Git.Reference.nameToId repo, 'HEAD'
-              .then (head) ->
-                repo.getCommit head
-                .then (parent) ->
-                  signature = Git.Signature.default repo
-                  repo.createCommit 'HEAD', signature, signature, message, oid, [parent]
-                  .then (oid) ->
-                    return resolve oid
-                  #   Git.Commit.createWithSignature repo, message, signature.toString(), "NULL"
-                  #   .then (oid) ->
-                  #     atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
+              if repo.isEmpty()
+                signature = Git.Signature.default repo
+                repo.createCommit 'HEAD', signature, signature, message, oid, []
+              else
+                Git.Reference.nameToId repo, 'HEAD'
+                .then (head) ->
+                  repo.getCommit head
+                  .then (parent) ->
+                    signature = Git.Signature.default repo
+                    repo.createCommit 'HEAD', signature, signature, message, oid, [parent]
+                    .then (oid) ->
+                      return resolve oid
+                    #   Git.Commit.createWithSignature repo, message, signature.toString(), "NULL"
+                    #   .then (oid) ->
+                    #     atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
         .catch (error) ->
           return reject error
 

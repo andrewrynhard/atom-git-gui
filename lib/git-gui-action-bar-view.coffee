@@ -79,43 +79,61 @@ class GitGuiActionBarView extends View
   update: ->
     pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
     Git.Repository.open pathToRepo
-    .then (repo) ->
-      repo.getCurrentBranch()
-      .then (ref) ->
-        statusOptions = new Git.StatusOptions()
-        Git.StatusList.create repo, statusOptions
-        .then (statusList) ->
-          do () ->
-            $('#commit-action').removeClass 'available'
-            for i in [0...statusList.entrycount() ]
-              entry = Git.Status.byIndex(statusList, i)
-              status = entry.status()
-              switch status
-                when Git.Status.STATUS.INDEX_NEW, \
-                     Git.Status.STATUS.INDEX_MODIFIED, \
-                     Git.Status.STATUS.INDEX_NEW + Git.Status.STATUS.INDEX_MODIFIED, \
-                     Git.Status.STATUS.INDEX_DELETED, \
-                     Git.Status.STATUS.INDEX_RENAMED
-                  $('#commit-action').addClass 'available'
-                  return
-        Git.Reference.nameToId repo, "refs/heads/#{ref.shorthand()}"
-        .then (local) ->
-          # TODO: Consider the case when a user wants to get the ahead/behind
-          #       count from a remote other than origin.
-          Git.Reference.nameToId repo, "refs/remotes/origin/#{ref.shorthand()}"
-          .then (upstream) ->
-            Git.Graph.aheadBehind(repo, local, upstream)
-            .then (aheadbehind) ->
-              if aheadbehind.ahead
-                $('#push-action').addClass 'available'
-              else
-                $('#push-action').removeClass 'available'
-              if aheadbehind.behind
-                $('#pull-action').addClass 'available'
-              else
-                $('#pull-action').removeClass 'available'
+    .then (repo) =>
+      @updateCommitAction repo
+      @updatePushAction repo
     .catch (error) ->
       # TODO: Add the ability to set remote refs.
+      atom.notifications.addError "#{error}"
+      console.log error
+
+  updateCommitAction: (repo) ->
+    statusOptions = new Git.StatusOptions()
+    Git.StatusList.create repo, statusOptions
+    .then (statusList) ->
+      do () ->
+        $('#commit-action').removeClass 'available'
+        for i in [0...statusList.entrycount() ]
+          entry = Git.Status.byIndex(statusList, i)
+          status = entry.status()
+          switch status
+            when Git.Status.STATUS.INDEX_NEW, \
+                 Git.Status.STATUS.INDEX_MODIFIED, \
+                 Git.Status.STATUS.INDEX_NEW + Git.Status.STATUS.INDEX_MODIFIED, \
+                 Git.Status.STATUS.INDEX_DELETED, \
+                 Git.Status.STATUS.INDEX_RENAMED
+              $('#commit-action').addClass 'available'
+              return
+    .catch (error) ->
+      atom.notifications.addError "#{error}"
+      console.log error
+
+  updatePushAction: (repo) ->
+    if repo.isEmpty()
+      return
+    Git.Remote.list(repo)
+    .then (remotes) ->
+      if remotes.length != 0
+        repo.getCurrentBranch()
+        .then (ref) ->
+          console.log ref.name()
+          Git.Reference.nameToId repo, ref.name()
+          .then (local) ->
+            # TODO: Consider the case when a user wants to get the ahead/behind
+            #       count from a remote other than origin.
+            Git.Reference.nameToId repo, "refs/remotes/origin/#{ref.shorthand()}"
+            .then (upstream) ->
+              Git.Graph.aheadBehind(repo, local, upstream)
+              .then (aheadbehind) ->
+                if aheadbehind.ahead
+                  $('#push-action').addClass 'available'
+                else
+                  $('#push-action').removeClass 'available'
+                if aheadbehind.behind
+                  $('#pull-action').addClass 'available'
+                else
+                  $('#pull-action').removeClass 'available'
+    .catch (error) ->
       atom.notifications.addError "#{error}"
       console.log error
 
