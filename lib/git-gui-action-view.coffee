@@ -51,9 +51,9 @@ class GitGuiActionView extends View
         $('#commit-action').removeClass 'available'
         @emitter.emit 'did-commit', oid
         @gitGuiCommitView.hide()
-        atom.notifications.addSuccess "Commit successful: #{oid.tostrS()}"
+        atom.notifications.addSuccess "Commit successful:", {detail: oid.tostrS() }
       .catch (error) ->
-        atom.notifications.addError "Commit unsuccessful: #{error}"
+        atom.notifications.addError "Commit unsuccessful:", {detail: error}
 
   openPushAction: (force) ->
     @gitGuiCommitView.hide()
@@ -74,6 +74,6 @@ class GitGuiActionView extends View
         atom.notifications.addSuccess("Push successful")
       .catch (error) ->
         $('#action-progress-indicator').css 'visibility', 'hidden'
-        atom.notifications.addError "Push unsuccessful: #{error}"
+        atom.notifications.addError "Push unsuccessful:", {detail: error}
 
 module.exports = GitGuiActionView
