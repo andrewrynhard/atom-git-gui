@@ -1,4 +1,6 @@
 path = require 'path'
+fs = require 'fs'
+child_process = require 'child_process'
 {$, View} = require 'space-pen'
 {TextEditorView} = require 'atom-space-pen-views'
 Git = require 'nodegit'
@@ -17,33 +19,50 @@ class GitGuiCommitView extends View
 
   commit: () ->
     promise = new Promise (resolve, reject) =>
-      message = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
-      $(document).ready ->
-        pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
-        Git.Repository.open pathToRepo
-        .then (repo) ->
-          repo.refreshIndex()
-          .then (index) ->
-            index.writeTree()
-            .then (oid) ->
-              if repo.isEmpty()
-                signature = Git.Signature.default repo
-                repo.createCommit 'HEAD', signature, signature, message, oid, []
-              else
-                Git.Reference.nameToId repo, 'HEAD'
-                .then (head) ->
-                  repo.getCommit head
-                  .then (parent) ->
-                    signature = Git.Signature.default repo
-                    repo.createCommit 'HEAD', signature, signature, message, oid, [parent]
-                    .then (oid) ->
-                      return resolve oid
-                    #   Git.Commit.createWithSignature repo, message, signature.toString(), "NULL"
-                    #   .then (oid) ->
-                    #     atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
+      pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
+      msg = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
+      commitEditMsg = path.join pathToRepo, 'COMMIT_EDITMSG'
+      fs.writeFile commitEditMsg , msg, (err) =>
+        if err then return reject err
+        @commitMsgHook(commitEditMsg)
+        .then () ->
+          Git.Repository.open pathToRepo
+          .then (repo) ->
+            repo.refreshIndex()
+            .then (index) ->
+              index.writeTree()
+              .then (oid) ->
+                if repo.isEmpty()
+                  signature = Git.Signature.default repo
+                  repo.createCommit 'HEAD', signature, signature, msg, oid, []
+                else
+                  Git.Reference.nameToId repo, 'HEAD'
+                  .then (head) ->
+                    repo.getCommit head
+                    .then (parent) ->
+                      signature = Git.Signature.default repo
+                      repo.createCommit 'HEAD', signature, signature, msg, oid, [parent]
+                      .then (oid) ->
+                        return resolve oid
+                      #   Git.Commit.createWithSignature repo, message, signature.toString(), "NULL"
+                      #   .then (oid) ->
+                      #     atom.notifications.addSuccess("Commit successful: #{oid.tostrS()}")
         .catch (error) ->
           return reject error
 
+    return promise
+
+  commitMsgHook: (commitEditMsg) ->
+    promise = new Promise (resolve, reject) ->
+      commitMsgHook = path.join $('#git-gui-project-list').val(), '.git', 'hooks', 'commit-msg'
+      fs.exists commitMsgHook, (exists) ->
+        if exists
+          child_process.exec "#{commitMsgHook} #{commitEditMsg}", {env: process.env} , (error, stdout, stderr) ->
+            if error then return reject error
+            if stderr then return reject stdout
+            return resolve()
+        else
+          return resolve()
     return promise
 
 module.exports = GitGuiCommitView
