@@ -116,7 +116,6 @@ class GitGuiActionBarView extends View
       if remotes.length != 0
         repo.getCurrentBranch()
         .then (ref) ->
-          console.log ref.name()
           Git.Reference.nameToId repo, ref.name()
           .then (local) ->
             # TODO: Consider the case when a user wants to get the ahead/behind
