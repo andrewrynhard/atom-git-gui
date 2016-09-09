@@ -134,18 +134,14 @@ class GitGuiView extends View
         .then (refs) ->
           for ref in refs
             if ref.isTag()
-              continue
+              return
 
-            option = "<option value=#{ref.name()}>#{ref.shorthand()}</option>"
+            option = "<option value='#{ref.name()}'>#{ref.shorthand()}</option>"
 
             if ref.isBranch()
               $('#git-gui-branch-list-branch').append $(option)
             else if ref.isRemote()
-              name = path.basename ref.shorthand()
-              Git.Branch.lookup repo, name, Git.Branch.BRANCH.LOCAL
-              .catch () ->
-                # Add the option to the remotes group if a local branch does not exist
-                $('#git-gui-branch-list-remote').append $(option)
+              $('#git-gui-branch-list-remote').append $(option)
 
             if ref.isHead()
               @currentRef = ref.name()
