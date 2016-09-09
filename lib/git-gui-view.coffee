@@ -12,7 +12,6 @@ Git = require 'nodegit'
 class GitGuiView extends View
   gitGuiActionBarView: null
   gitGuiStagingAreaView: null
-  gitGuiSettingsView: null
   gitGuiActionView: null
   gitGuiDiffView: null
   modalPanel: null
@@ -81,7 +80,6 @@ class GitGuiView extends View
     @gitGuiActionBarView.destroy()
     @gitGuiActionView.destroy()
     @gitGuiStagingAreaView.destroy()
-    @gitGuiSettingsView.destroy()
     @gitGuiDiffView.destroy()
     @subscriptions.dispose()
     @watcher.close()
