@@ -119,15 +119,11 @@ atom-workspace-axis.horizontal {
 }
 
 .git-gui-settings-subview {
-    display: none;
+    display: block;
     width: 75%;
     height: 100%;
     padding-left: 7px;
     padding-right: 7px;
-}
-
-.git-gui-settings-subview.active {
-    display: block;
 }
 
 .git-gui-settings-menu-list {
@@ -192,8 +188,12 @@ atom-workspace-axis.horizontal {
     visibility: hidden;
 }
 
+#git-gui-project-list {
+    width: 50%;
+}
+
 #git-gui-remotes-list {
-    width: 33%;
+    width: 50%;
 }
 
 #status-list {
@@ -230,10 +230,6 @@ atom-workspace-axis.horizontal {
 
 .git-gui-diff-view-hunk-line.removed {
     color: red;
-}
-
-#git-gui-project-list {
-    width: 50%;
 }
 // TODO: Extract the common code for the following, and make it a class
 

@@ -70,7 +70,6 @@ class GitGuiActionBarView extends View
         $('#settings').toggleClass('open')
         $('.git-gui-staging-area').toggleClass('fade-and-blur')
         $('.git-gui-settings-menu-list li.selected').removeClass('selected')
-        $('.git-gui-settings-subview.active').removeClass('active')
 
   serialize: ->
 

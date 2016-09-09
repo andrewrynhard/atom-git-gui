@@ -6,7 +6,8 @@ GitGuiActionBarView = require './git-gui-action-bar-view'
 GitGuiActionView = require './git-gui-action-view'
 GitGuiStagingAreaView = require './git-gui-staging-area-view'
 GitGuiDiffView = require './git-gui-diff-view'
-GitGuiSettingsView = require './git-gui-settings-view'
+GitGuiConfigView = require './git-gui-config-view'
+Git = require 'nodegit'
 
 class GitGuiView extends View
   gitGuiActionBarView: null
@@ -19,11 +20,16 @@ class GitGuiView extends View
   @content: ->
     @div class: 'git-gui', =>
       @subview 'gitGuiDiffView', new GitGuiDiffView()
-      @subview 'gitGuiSettingsView', new GitGuiSettingsView()
+      @div class: 'git-gui-settings', id: 'settings', =>
+        @div class: 'git-gui-settings-content', =>
+          @subview 'gitGuiConfigView', new GitGuiConfigView()
       @div class: 'git-gui-overlay', =>
         @subview 'gitGuiActionBarView', new GitGuiActionBarView()
         @div =>
+          @span class: 'icon icon-repo'
           @select class: 'input-select', id: 'git-gui-project-list'
+          @span class: 'icon icon-git-branch'
+          @select class: 'input-select', id: 'git-gui-branch-list'
         @subview 'gitGuiStagingAreaView', new GitGuiStagingAreaView()
 
   initialize: ->
@@ -46,6 +52,15 @@ class GitGuiView extends View
 
         @updateAll()
         @selectedProject = $('#git-gui-project-list').val()
+
+      localGroup = "<optgroup id='git-gui-branch-list-branch' label='Branch'></optgroup>"
+      remoteGroup = "<optgroup id='git-gui-branch-list-remote' label='Remote'></optgroup>"
+      # tagGroup = "<optgroup id='git-gui-branch-list-tag' label='Tag'></optgroup>"
+      $('#git-gui-branch-list').append $(localGroup)
+      $('#git-gui-branch-list').append $(remoteGroup)
+      # $('#git-gui-branch-list').append $(tagGroup)
+      $('#git-gui-branch-list').on 'change', () =>
+        @checkout()
 
     @subscriptions = new CompositeDisposable
 
@@ -89,8 +104,7 @@ class GitGuiView extends View
   updateAll: ->
     pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
     @gitGuiStagingAreaView.updateStatuses()
-    @gitGuiSettingsView.gitGuiRepoView.updateBranches(pathToRepo)
-    @gitGuiSettingsView.gitGuiConfigView.updateConfig(pathToRepo)
+    @updateBranches(pathToRepo)
     @gitGuiActionView.gitGuiPushView.updateRemotes(pathToRepo)
 
   open: ->
@@ -109,5 +123,75 @@ class GitGuiView extends View
     if $('.git-gui').hasClass 'open'
       return true
     return false
+
+  updateBranches: (pathToRepo) ->
+    $(document).ready () ->
+      # Clear the `select` menu
+      $('#git-gui-branch-list-branch').find('option').remove().end()
+      $('#git-gui-branch-list-remote').find('option').remove().end()
+      Git.Repository.open pathToRepo
+      .then (repo) ->
+        # Use `TYPE.OID` so that whatever `HEAD` points to is not duplicated in the branch list
+        repo.getReferences(Git.Reference.TYPE.OID)
+        .then (refs) ->
+          for ref in refs
+            if ref.isTag()
+              continue
+
+            option = "<option value=#{ref.name()}>#{ref.shorthand()}</option>"
+
+            if ref.isBranch()
+              $('#git-gui-branch-list-branch').append $(option)
+            else if ref.isRemote()
+              name = path.basename ref.shorthand()
+              Git.Branch.lookup repo, name, Git.Branch.BRANCH.LOCAL
+              .catch () ->
+                # Add the option to the remotes group if a local branch does not exist
+                $('#git-gui-branch-list-remote').append $(option)
+
+            if ref.isHead()
+              @currentRef = ref.name()
+              $('#git-gui-branch-list').val(@currentRef)
+      .catch (error) ->
+        console.log error
+
+  checkout: ->
+    pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
+    Git.Repository.open pathToRepo
+    .then (repo) =>
+      repo.getReference $('#git-gui-branch-list').val()
+      .then (ref) =>
+        if ref.isBranch()
+          @checkoutBranch repo, ref
+        else if ref.isRemote()
+          @checkoutRemote repo, ref
+    .done () =>
+      # Ensure any changes are reflected in the branch list
+      @updateBranches pathToRepo
+
+  checkoutBranch: (repo, ref) ->
+    checkoutOptions = new Git.CheckoutOptions()
+    repo.checkoutBranch ref, checkoutOptions
+    .then () ->
+      atom.notifications.addSuccess "Branch checkout successful:", {description: ref.shorthand() }
+    .catch (error) ->
+      console.log error
+      atom.notifications.addError "Branch checkout unsuccessful:", {description: error.toString() }
+
+  checkoutRemote: (repo, ref) ->
+    Git.Commit.lookup repo, ref.target()
+    .then (commit) ->
+      name = path.basename ref.shorthand()
+      Git.Branch.create repo, name, commit, false
+      .then (branch) ->
+        Git.Branch.setUpstream branch, ref.shorthand()
+        .then () ->
+          checkoutOptions = new Git.CheckoutOptions()
+          repo.checkoutBranch branch, checkoutOptions
+          .then () ->
+            atom.notifications.addSuccess "Branch checkout successful:", {description: ref.shorthand() }
+      .catch (error) ->
+        console.log error
+        atom.notifications.addError "Branch checkout unsuccessful:", {description: error.toString() }
 
 module.exports = GitGuiView
