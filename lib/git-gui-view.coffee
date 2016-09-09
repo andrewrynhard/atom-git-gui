@@ -55,10 +55,9 @@ class GitGuiView extends View
 
       localGroup = "<optgroup id='git-gui-branch-list-branch' label='Branch'></optgroup>"
       remoteGroup = "<optgroup id='git-gui-branch-list-remote' label='Remote'></optgroup>"
-      # tagGroup = "<optgroup id='git-gui-branch-list-tag' label='Tag'></optgroup>"
       $('#git-gui-branch-list').append $(localGroup)
       $('#git-gui-branch-list').append $(remoteGroup)
-      # $('#git-gui-branch-list').append $(tagGroup)
+
       $('#git-gui-branch-list').on 'change', () =>
         @checkout()
 
@@ -105,6 +104,7 @@ class GitGuiView extends View
     pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
     @gitGuiStagingAreaView.updateStatuses()
     @updateBranches(pathToRepo)
+    @gitGuiConfigView.updateConfig(pathToRepo)
     @gitGuiActionView.gitGuiPushView.updateRemotes(pathToRepo)
 
   open: ->

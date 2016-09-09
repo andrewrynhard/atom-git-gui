@@ -44,36 +44,15 @@ class GitGuiConfigView extends View
   # TODO: Avoid having to export keys to 'secring.asc'
   # TODO: List only the keys that are associated with the active `user.email`
   updateConfig: (pathToRepo) ->
-    $(document).ready () =>
-      # Clear the `select` menu
-      $('#git-gui-user-signingkey-list').find('option').remove().end()
-      home = process.env.HOME
-      pubring = path.join(home, '.gnupg', 'secring.asc')
-      fs.exists pubring, (exists) =>
-        if exists
-          fs.readFile pubring, 'utf-8', (err, data) ->
-            if (err)
-              throw err
-            keys = openpgp.key.readArmored(data).keys
-            for key in keys
-              userid = key.getPrimaryUser().user.userId.userid
-              userid = userid.replace(/</g, '&lt')
-              userid = userid.replace(/>/g, '&gt')
-              keyid = key.primaryKey.getKeyId().toHex()
-              option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
-              $('#git-gui-user-signingkey-list').append $(option)
-        else
-          $('#git-gui-user-signingkey-list').hide()
-
-        Git.Repository.open pathToRepo
-        .then (repo) =>
-          repo.config()
-          .then (config) =>
-            @setUserName config
-            @setUserEmail config
-            @setUserSigningKey config
-        .catch (error) ->
-          console.log error
+    Git.Repository.open pathToRepo
+    .then (repo) =>
+      repo.config()
+      .then (config) =>
+        @setUserName config
+        @setUserEmail config
+        @setUserSigningKey config
+    .catch (error) ->
+      console.log error
 
   setUserName: (config) ->
     # Get the user name
@@ -92,6 +71,27 @@ class GitGuiConfigView extends View
       console.log error
 
   setUserSigningKey: (config) ->
+    $(document).ready () ->
+      # Clear the `select` menu
+      $('#git-gui-user-signingkey-list').find('option').remove().end()
+      home = process.env.HOME
+      pubring = path.join(home, '.gnupg', 'secring.asc')
+      fs.exists pubring, (exists) ->
+        if exists
+          fs.readFile pubring, 'utf-8', (err, data) ->
+            if (err)
+              throw err
+            keys = openpgp.key.readArmored(data).keys
+            for key in keys
+              userid = key.getPrimaryUser().user.userId.userid
+              userid = userid.replace(/</g, '&lt')
+              userid = userid.replace(/>/g, '&gt')
+              keyid = key.primaryKey.getKeyId().toHex()
+              option = "<option value=#{keyid}>#{keyid} #{userid}</option>"
+              $('#git-gui-user-signingkey-list').append $(option)
+        else
+          $('#git-gui-user-signingkey-list').hide()
+
     # Get the user signingkey
     config.getStringBuf 'user.signingkey'
     .then (buf) ->
