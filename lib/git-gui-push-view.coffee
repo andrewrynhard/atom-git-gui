@@ -48,6 +48,7 @@ class GitGuiPushView extends View
                 refSpec = '+' + refSpec
               remote.push [refSpec],
                   callbacks:
+                    # FIXME: Push hangs when credentials are invalid
                     credentials: () ->
                       return Git.Cred.userpassPlaintextNew username, password
                     # transferProgress: (stats) ->
