@@ -185,11 +185,13 @@ class GitGuiStagingAreaView extends View
         indexSpan.addClass 'status-removed icon-alert'
         indexSpan.css 'opacity', 1
       when Git.Status.STATUS.INDEX_DELETED
+        li.append removeSpan
         $(fileSpan).data 'staged', true
         $(diffSpan).data 'staged', true
         statusSpan.addClass 'status-removed icon-diff-removed'
         indexSpan.css 'opacity', 1
       when Git.Status.STATUS.WT_DELETED
+        li.append removeSpan
         statusSpan.addClass 'status-removed icon-diff-removed'
         $(fileSpan).data 'removed', true
       when Git.Status.STATUS.INDEX_RENAMED
