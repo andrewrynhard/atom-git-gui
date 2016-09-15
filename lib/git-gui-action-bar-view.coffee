@@ -12,6 +12,8 @@ class GitGuiActionBarView extends View
         @li class: 'list-item', =>
           @a class: 'icon', id: 'pull-action'
         @li class: 'list-item', =>
+          @a class: 'icon', id: 'log-action'
+        @li class: 'list-item', =>
           @a class: 'icon', id: 'settings-action'
 
   # TODO: Add an `amend` option for `commit`
@@ -65,6 +67,31 @@ class GitGuiActionBarView extends View
         $('#action-view').parent().show()
         $('#action-view').addClass 'open'
         # @parentView.gitGuiActionView.openPullAction()
+
+      $('body').on 'click', '#log-action', () ->
+        $('#log').toggleClass('open')
+        $('.git-gui-staging-area').toggleClass('fade-and-blur')
+        pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
+        Git.Repository.open pathToRepo
+        .then (repo) ->
+          repo.getMasterCommit()
+          .then (firstCommitOnMaster) ->
+            history = firstCommitOnMaster.history Git.Revwalk.SORT.Time
+
+            text = ''
+            history.on 'commit', (commit) ->
+              text += 'commit ' + commit.sha() + '\n'
+              text += 'Author: ' + commit.author().name() + ' <' + commit.author().email() + '>' + '\n'
+              text += 'Date: ' + commit.date() + '\n'
+              text += '\n    ' + commit.message() + '\n'
+            history.on 'end', () ->
+              $('#log-text').text text
+
+            history.start()
+        .catch (error) ->
+          # TODO: Add the ability to set remote refs.
+          atom.notifications.addError "#{error}"
+          console.log error
 
       $('body').on 'click', '#settings-action', () ->
         $('#settings').toggleClass('open')
@@ -133,5 +160,8 @@ class GitGuiActionBarView extends View
     .catch (error) ->
       atom.notifications.addError "#{error}"
       console.log error
+
+    upateLogAction: (repo) ->
+
 
 module.exports = GitGuiActionBarView

@@ -91,6 +91,34 @@ atom-workspace-axis.horizontal {
     margin-left: auto;
 }
 
+#options {
+    height: 30px;
+}
+
+.git-gui-log {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 0;
+    z-index: 0;
+    height: 100%;
+}
+
+.git-gui-log.open {
+    opacity: 1;
+    z-index: 1;
+}
+
+#log-text {
+    height: 100%;
+    white-space: pre;
+    overflow-y: auto;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
 .git-gui-settings {
     position: absolute;
     bottom: 0;
@@ -256,6 +284,11 @@ atom-workspace-axis.horizontal {
 #pull-action::before {
     font-family: "Octicons Regular";
     content: "\f006";
+}
+
+#log-action::before {
+    font-family: "Octicons Regular";
+    content: "\f007";
 }
 
 #settings-action::before {

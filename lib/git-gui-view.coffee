@@ -19,12 +19,14 @@ class GitGuiView extends View
   @content: ->
     @div class: 'git-gui', =>
       @subview 'gitGuiDiffView', new GitGuiDiffView()
+      @div class: 'git-gui-log', id: 'log', =>
+        @div id: 'log-text'
       @div class: 'git-gui-settings', id: 'settings', =>
         @div class: 'git-gui-settings-content', =>
           @subview 'gitGuiConfigView', new GitGuiConfigView()
       @div class: 'git-gui-overlay', =>
         @subview 'gitGuiActionBarView', new GitGuiActionBarView()
-        @div =>
+        @div id: 'options', =>
           @span class: 'icon icon-repo'
           @select class: 'input-select', id: 'git-gui-project-list'
           @span class: 'icon icon-git-branch'
