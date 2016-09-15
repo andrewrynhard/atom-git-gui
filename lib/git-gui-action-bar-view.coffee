@@ -20,6 +20,10 @@ class GitGuiActionBarView extends View
   # TODO: Add an `merge` option for `pull`
   initialize: ->
     $(document).ready () =>
+      # TODO: check if log is available via number of commits made
+      $('#log-action').addClass('available')
+      $('#settings-action').addClass('available')
+
       $('body').on 'mouseenter', '#push-action', () ->
         $('body').on 'keydown', (e) ->
           if e.which == 16
@@ -69,7 +73,13 @@ class GitGuiActionBarView extends View
         # @parentView.gitGuiActionView.openPullAction()
 
       $('body').on 'click', '#log-action', () ->
-        $('#log').toggleClass('open')
+        if $('#log').hasClass('open')
+          $('#log').removeClass('open')
+          $('#settings-action').addClass('available')
+        else
+          $('#log').addClass('open')
+          $('#settings-action').removeClass('available')
+
         $('.git-gui-staging-area').toggleClass('fade-and-blur')
         pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
         Git.Repository.open pathToRepo
@@ -94,7 +104,13 @@ class GitGuiActionBarView extends View
           console.log error
 
       $('body').on 'click', '#settings-action', () ->
-        $('#settings').toggleClass('open')
+        if $('#settings').hasClass('open')
+          $('#settings').removeClass('open')
+          $('#log-action').addClass('available')
+        else
+          $('#settings').addClass('open')
+          $('#log-action').removeClass('available')
+
         $('.git-gui-staging-area').toggleClass('fade-and-blur')
 
   serialize: ->
@@ -111,6 +127,7 @@ class GitGuiActionBarView extends View
       # TODO: Add the ability to set remote refs.
       atom.notifications.addError "#{error}"
       console.log error
+
 
   updateCommitAction: (repo) ->
     statusOptions = new Git.StatusOptions()

@@ -286,9 +286,33 @@ atom-workspace-axis.horizontal {
     content: "\f006";
 }
 
+#log-action.available {
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+#log-action {
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 0.25;
+    pointer-events: none;
+}
+
 #log-action::before {
     font-family: "Octicons Regular";
     content: "\f007";
+}
+
+#settings-action.available {
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+#settings-action {
+    -webkit-transition: opacity 0.15s ease;
+    opacity: 0.25;
+    pointer-events: none;
 }
 
 #settings-action::before {
