@@ -74,6 +74,6 @@ class GitGuiActionView extends View
         atom.notifications.addSuccess("Push successful")
       .catch (error) ->
         $('#action-progress-indicator').css 'visibility', 'hidden'
-        atom.notifications.addError "Push unsuccessful:", {description: error}
+        atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
 
 module.exports = GitGuiActionView
