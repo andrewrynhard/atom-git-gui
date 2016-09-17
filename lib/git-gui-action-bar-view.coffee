@@ -84,7 +84,7 @@ class GitGuiActionBarView extends View
         pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
         Git.Repository.open pathToRepo
         .then (repo) ->
-          repo.getMasterCommit()
+          repo.getHeadCommit()
           .then (firstCommitOnMaster) ->
             history = firstCommitOnMaster.history Git.Revwalk.SORT.Time
 
