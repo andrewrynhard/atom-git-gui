@@ -11,6 +11,8 @@ class GitGuiPushView extends View
       @subview 'userName', new TextEditorView(mini: true)
       @h2 "Password"
       @subview 'userPassword', new TextEditorView(mini: true)
+      @label class: 'input-label', =>
+        @input class: 'input-toggle', type: 'checkbox'
       @h2 "Remote"
       @div =>
         @select class: 'input-select', id: 'git-gui-remotes-list'
@@ -32,8 +34,6 @@ class GitGuiPushView extends View
             $('#git-gui-remotes-list').append $(option)
 
   push: (force) ->
-    username = @userName.getText()
-    password = @userPassword.getText()
     pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
     promise = new Promise (resolve, reject) ->
       $(document).ready ->
@@ -48,9 +48,14 @@ class GitGuiPushView extends View
                 refSpec = '+' + refSpec
               remote.push [refSpec],
                   callbacks:
-                    # FIXME: Push hangs when credentials are invalid
-                    credentials: () ->
-                      return Git.Cred.userpassPlaintextNew username, password
+                    credentials: (url, username) ->
+                      if useSSH
+                        return Git.Cred.sshKeyFromAgent(username)
+                      else
+                        username = @userName.getText()
+                        password = @userPassword.getText()
+                        return Git.Cred.userpassPlaintextNew username, password
+
                     # transferProgress: (stats) ->
                     #   console.log stats
               .then () ->
