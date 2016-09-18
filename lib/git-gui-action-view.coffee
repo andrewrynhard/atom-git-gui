@@ -1,3 +1,5 @@
+path = require 'path'
+Git = require 'nodegit'
 {Emitter} = require 'atom'
 {$, View} = require 'space-pen'
 GitGuiCommitView = require './git-gui-commit-view'
@@ -38,42 +40,73 @@ class GitGuiActionView extends View
     @emitter.on 'did-push', callback
 
   openCommitAction: ->
-    @gitGuiPushView.hide()
     @gitGuiCommitView.show()
     $('#action-view-action-button').text 'Commit'
     $('#action-view-action-button').off 'click'
     $('#action-view-action-button').on 'click', () =>
       @gitGuiCommitView.commit()
-      .then (oid) =>
+      .catch (error) ->
+        atom.notifications.addError "Commit unsuccessful:", {description: error}
+      .done (oid) =>
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
         $('#commit-action').removeClass 'available'
-        @emitter.emit 'did-commit', oid
         @gitGuiCommitView.hide()
+        @emitter.emit 'did-commit', oid
         atom.notifications.addSuccess "Commit successful:", {description: oid.tostrS() }
-      .catch (error) ->
-        atom.notifications.addError "Commit unsuccessful:", {description: error}
 
   openPushAction: (force) ->
-    @gitGuiCommitView.hide()
-    @gitGuiPushView.show()
     $('#action-view-action-button').text 'Push'
     $('#action-view-action-button').off 'click'
+    pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
+    Git.Repository.open pathToRepo
+    .then (repo) =>
+      repo.getCurrentBranch()
+      .then (ref) =>
+        if force
+          refSpec = '+' + refSpec
+        refSpec = "refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"
+
+        Git.Remote.lookup repo, $('#git-gui-remotes-list').val()
+        .then (remote) =>
+          url = remote.url()
+          if (url.indexOf("https") == - 1)
+            @openSSHPush.pushSSH(remote, refSpec)
+          else
+            @openPlaintextPush.pushPlainText(remote, refSpec)
+          @gitGuiPushView.show()
+
+  openSSHPush: (remote, refSpec) ->
+    $('#push-plaintext-options').css 'display', 'none'
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
-      @gitGuiPushView.push(force)
-      .then () =>
-        $('#action-view-close-button').click()
-        $('#action-view-action-button').empty()
-        $('#action-view-action-button').off 'click'
-        $('#push-action').removeClass 'available'
-        @emitter.emit 'did-push'
-        @gitGuiPushView.hide()
-        $('#action-progress-indicator').css 'visibility', 'hidden'
-        atom.notifications.addSuccess("Push successful")
+      @gitGuiPushView.pushSSH remote, refSpec
       .catch (error) ->
         $('#action-progress-indicator').css 'visibility', 'hidden'
         atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
+      .done () =>
+        @showPushSuccess()
+
+  openPlaintextPush: (remote, refSpec) ->
+    $('#push-plaintext-options').css 'display', 'block'
+    $('#action-view-action-button').on 'click', () =>
+      $('#action-progress-indicator').css 'visibility', 'visible'
+      @gitGuiPushView.pushPlainText remote, refSpec
+      .catch (error) ->
+        $('#action-progress-indicator').css 'visibility', 'hidden'
+        atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
+      .done () =>
+        @showPushSuccess()
+
+  showPushSuccess: () ->
+    $('#action-view-close-button').click()
+    $('#action-view-action-button').empty()
+    $('#action-view-action-button').off 'click'
+    $('#push-action').removeClass 'available'
+    $('#action-progress-indicator').css 'visibility', 'hidden'
+    @gitGuiPushView.hide()
+    @emitter.emit 'did-push'
+    atom.notifications.addSuccess("Push successful")
 
 module.exports = GitGuiActionView
