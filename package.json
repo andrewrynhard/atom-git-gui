@@ -1,7 +1,7 @@
 {
   "name": "git-gui",
   "main": "./lib/git-gui",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "A gui for git.",
   "keywords": [
     "git"
