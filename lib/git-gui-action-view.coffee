@@ -47,7 +47,7 @@ class GitGuiActionView extends View
       @gitGuiCommitView.commit()
       .catch (error) ->
         atom.notifications.addError "Commit unsuccessful:", {description: error}
-      .done (oid) =>
+      .then (oid) =>
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
         $('#action-view-action-button').off 'click'
@@ -72,9 +72,9 @@ class GitGuiActionView extends View
         .then (remote) =>
           url = remote.url()
           if (url.indexOf("https") == - 1)
-            @openSSHPush.pushSSH(remote, refSpec)
+            @openSSHPush remote, refSpec
           else
-            @openPlaintextPush.pushPlainText(remote, refSpec)
+            @openPlaintextPush remote, refSpec
           @gitGuiPushView.show()
 
   openSSHPush: (remote, refSpec) ->
@@ -85,7 +85,7 @@ class GitGuiActionView extends View
       .catch (error) ->
         $('#action-progress-indicator').css 'visibility', 'hidden'
         atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
-      .done () =>
+      .then () =>
         @showPushSuccess()
 
   openPlaintextPush: (remote, refSpec) ->
@@ -96,7 +96,7 @@ class GitGuiActionView extends View
       .catch (error) ->
         $('#action-progress-indicator').css 'visibility', 'hidden'
         atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
-      .done () =>
+      .then () =>
         @showPushSuccess()
 
   showPushSuccess: () ->
