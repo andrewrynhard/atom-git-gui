@@ -77,7 +77,7 @@ class GitGuiActionView extends View
             @openPlaintextPush remote, refSpec
           @gitGuiPushView.show()
 
-  openSSHPush: (remote, refSpec) ->
+  openSSHPush: (remote, refSpec, refShorthand) ->
     $('#push-plaintext-options').css 'display', 'none'
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
@@ -85,9 +85,9 @@ class GitGuiActionView extends View
       .catch (error) =>
         @showPushError error
       .then () =>
-        @showPushSuccess()
+        @showPushSuccess(remote.url(), refShorthand)
 
-  openPlaintextPush: (remote, refSpec) ->
+  openPlaintextPush: (remote, refSpec, refShorthand) ->
     $('#push-plaintext-options').css 'display', 'block'
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
@@ -95,13 +95,13 @@ class GitGuiActionView extends View
       .catch (error) =>
         @showPushError error
       .then () =>
-        @showPushSuccess()
+        @showPushSuccess(remote.url(), refShorthand)
 
   showPushError: (error) ->
     $('#action-progress-indicator').css 'visibility', 'hidden'
     atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
 
-  showPushSuccess: () ->
+  showPushSuccess: (url, refShorthand) ->
     $('#action-view-close-button').click()
     $('#action-view-action-button').empty()
     $('#action-view-action-button').off 'click'
@@ -109,6 +109,6 @@ class GitGuiActionView extends View
     $('#action-progress-indicator').css 'visibility', 'hidden'
     @gitGuiPushView.hide()
     @emitter.emit 'did-push'
-    atom.notifications.addSuccess("Push successful")
+    atom.notifications.addSuccess("Push successful:", {description: "#{url} #{refShorthand}" } )
 
 module.exports = GitGuiActionView
