@@ -100,6 +100,7 @@ class GitGuiActionView extends View
   showPushError: (error) ->
     $('#action-progress-indicator').css 'visibility', 'hidden'
     atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
+
   showPushSuccess: () ->
     $('#action-view-close-button').click()
     $('#action-view-action-button').empty()
