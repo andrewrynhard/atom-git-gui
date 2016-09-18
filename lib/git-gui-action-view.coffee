@@ -109,6 +109,6 @@ class GitGuiActionView extends View
     $('#action-progress-indicator').css 'visibility', 'hidden'
     @gitGuiPushView.hide()
     @emitter.emit 'did-push'
-    atom.notifications.addSuccess("Push successful:", {description: "To #{url}\n\t#{refShorthand}" } )
+    atom.notifications.addSuccess("Push successful:", {detail: "To #{url}\n\t#{refShorthand}" } )
 
 module.exports = GitGuiActionView
