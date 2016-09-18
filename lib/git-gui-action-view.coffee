@@ -72,9 +72,9 @@ class GitGuiActionView extends View
         .then (remote) =>
           url = remote.url()
           if (url.indexOf("https") == - 1)
-            @openSSHPush remote, refSpec
+            @openSSHPush remote, refSpec, ref.shorthand()
           else
-            @openPlaintextPush remote, refSpec
+            @openPlaintextPush remote, refSpec, ref.shorthand()
           @gitGuiPushView.show()
 
   openSSHPush: (remote, refSpec, refShorthand) ->
