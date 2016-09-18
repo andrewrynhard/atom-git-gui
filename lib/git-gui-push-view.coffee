@@ -20,6 +20,8 @@ class GitGuiPushView extends View
   destroy: ->
 
   updateRemotes: (pathToRepo) ->
+    # Clear the `select` menu
+    $('#git-gui-remotes-list').find('option').remove().end()
     Git.Repository.open pathToRepo
     .then (repo) ->
       Git.Remote.list repo
