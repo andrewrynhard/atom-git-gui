@@ -35,27 +35,32 @@ class GitGuiPushView extends View
 
   push: (force) ->
     pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
-    promise = new Promise (resolve, reject) ->
-      $(document).ready ->
+    promise = new Promise (resolve, reject) =>
+      $(document).ready =>
         Git.Repository.open pathToRepo
-        .then (repo) ->
+        .then (repo) =>
           repo.getCurrentBranch()
-          .then (ref) ->
+          .then (ref) =>
             Git.Remote.lookup repo, $('#git-gui-remotes-list').val()
-            .then (remote) ->
+            .then (remote) =>
               refSpec = "refs/heads/#{ref.shorthand()}:refs/heads/#{ref.shorthand()}"
               if force
                 refSpec = '+' + refSpec
+              attempt = true
               remote.push [refSpec],
                   callbacks:
-                    credentials: (url, username) ->
-                      if useSSH
-                        return Git.Cred.sshKeyFromAgent(username)
-                      else
-                        username = @userName.getText()
-                        password = @userPassword.getText()
-                        return Git.Cred.userpassPlaintextNew username, password
-
+                    # certificateCheck: () =>
+                    #   return 1
+                    # FIXME: Push hangs when credentials are invalid
+                    credentials: (url, userName) =>
+                      if attempt
+                        attempt = false
+                        if (remote.url().indexOf("https") == - 1)
+                          console.log url, userName
+                          return Git.Cred.sshKeyFromAgent(userName)
+                        else
+                          return Git.Cred.userpassPlaintextNew @userName.getText(), @userPassword.getText()
+                        throw new Error('Could not authenticate')
                     # transferProgress: (stats) ->
                     #   console.log stats
               .then () ->
