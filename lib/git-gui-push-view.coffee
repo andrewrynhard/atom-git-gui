@@ -16,20 +16,17 @@ class GitGuiPushView extends View
         @select class: 'input-select', id: 'git-gui-remotes-list'
 
   initialize: ->
-    pathToRepo = path.join atom.project.getPaths()[0], '.git'
-    @updateRemotes(pathToRepo)
 
   destroy: ->
 
   updateRemotes: (pathToRepo) ->
-    $(document).ready () ->
-      Git.Repository.open pathToRepo
-      .then (repo) ->
-        repo.getRemotes()
-        .then (remotes) ->
-          for remote in remotes
-            option = "<option value=#{remote}>#{remote}</option>"
-            $('#git-gui-remotes-list').append $(option)
+    Git.Repository.open pathToRepo
+    .then (repo) ->
+      Git.Remote.list repo
+      .then (remotes) ->
+        for remote in remotes
+          option = "<option value=#{remote}>#{remote}</option>"
+          $('#git-gui-remotes-list').append $(option)
 
   pushPlainText: (remote, refSpec) ->
     attempt = true
