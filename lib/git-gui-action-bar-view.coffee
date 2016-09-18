@@ -178,7 +178,4 @@ class GitGuiActionBarView extends View
       atom.notifications.addError "#{error}"
       console.log error
 
-    upateLogAction: (repo) ->
-
-
 module.exports = GitGuiActionBarView
