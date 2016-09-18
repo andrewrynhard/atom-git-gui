@@ -20,7 +20,11 @@ class GitGuiCommitView extends View
   commit: () ->
     promise = new Promise (resolve, reject) =>
       pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
-      msg = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText() + '\n'
+      msg = ''
+      if @bodyEditor.model.isEmpty()
+        msg = @subjectEditor.getText() + '\n\n'
+      else
+        msg = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText() + '\n'
       commitEditMsg = path.join pathToRepo, 'COMMIT_EDITMSG'
       fs.writeFile commitEditMsg , msg, (err) =>
         if err then return reject err
