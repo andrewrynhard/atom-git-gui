@@ -82,9 +82,8 @@ class GitGuiActionView extends View
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
       @gitGuiPushView.pushSSH remote, refSpec
-      .catch (error) ->
-        $('#action-progress-indicator').css 'visibility', 'hidden'
-        atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
+      .catch (error) =>
+        @showPushError error
       .then () =>
         @showPushSuccess()
 
@@ -93,12 +92,14 @@ class GitGuiActionView extends View
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
       @gitGuiPushView.pushPlainText remote, refSpec
-      .catch (error) ->
-        $('#action-progress-indicator').css 'visibility', 'hidden'
-        atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
+      .catch (error) =>
+        @showPushError error
       .then () =>
         @showPushSuccess()
 
+  showPushError: (error) ->
+    $('#action-progress-indicator').css 'visibility', 'hidden'
+    atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
   showPushSuccess: () ->
     $('#action-view-close-button').click()
     $('#action-view-action-button').empty()
