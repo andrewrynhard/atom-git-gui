@@ -49,18 +49,17 @@ class GitGuiPushView extends View
               attempt = true
               remote.push [refSpec],
                   callbacks:
-                    # certificateCheck: () =>
-                    #   return 1
-                    # FIXME: Push hangs when credentials are invalid
+                    certificateCheck: () ->
+                      return 1
                     credentials: (url, userName) =>
                       if attempt
                         attempt = false
-                        if (remote.url().indexOf("https") == - 1)
-                          console.log url, userName
+                        if (url.indexOf("https") == - 1)
                           return Git.Cred.sshKeyFromAgent(userName)
                         else
                           return Git.Cred.userpassPlaintextNew @userName.getText(), @userPassword.getText()
-                        throw new Error('Could not authenticate')
+                      else
+                        return Git.Cred.defaultNew()
                     # transferProgress: (stats) ->
                     #   console.log stats
               .then () ->
