@@ -19,8 +19,6 @@ class GitGuiView extends View
   @content: ->
     @div class: 'git-gui', =>
       @subview 'gitGuiDiffView', new GitGuiDiffView()
-      @div class: 'git-gui-log', id: 'log', =>
-        @div id: 'log-text'
       @div class: 'git-gui-settings', id: 'settings', =>
         @div class: 'git-gui-settings-content', =>
           @subview 'gitGuiConfigView', new GitGuiConfigView()
@@ -31,6 +29,7 @@ class GitGuiView extends View
           @select class: 'input-select', id: 'git-gui-project-list'
           @span class: 'icon icon-git-branch'
           @select class: 'input-select', id: 'git-gui-branch-list'
+        @div class: 'git-gui-log', id: 'log'
         @subview 'gitGuiStagingAreaView', new GitGuiStagingAreaView()
 
   initialize: ->
@@ -61,6 +60,10 @@ class GitGuiView extends View
 
       $('#git-gui-branch-list').on 'change', () =>
         @checkout()
+
+      $('#log').on 'scroll', () =>
+        if($('#log').scrollTop() + $('#log').innerHeight() >= $('#log')[0].scrollHeight)
+          @gitGuiActionBarView.updateLog()
 
     @subscriptions = new CompositeDisposable
 

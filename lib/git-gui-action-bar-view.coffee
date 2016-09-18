@@ -2,6 +2,8 @@ Git = require 'nodegit'
 {$, View} = require 'space-pen'
 
 class GitGuiActionBarView extends View
+  startIndex: 0
+  endIndex: 10
   @content: ->
     @div class: 'git-gui-action-bar', =>
       @ul class: 'list-group git-gui-action-bar-list', =>
@@ -72,36 +74,19 @@ class GitGuiActionBarView extends View
         $('#action-view').addClass 'open'
         # @parentView.gitGuiActionView.openPullAction()
 
-      $('body').on 'click', '#log-action', () ->
+      $('body').on 'click', '#log-action', () =>
         if $('#log').hasClass('open')
-          $('#log').removeClass('open')
+          $('.git-gui-staging-area').removeClass('fade-and-blur')
           $('#settings-action').addClass('available')
+          $('#log').removeClass('open')
+          $('#log').empty()
+          @startIndex = 0
+          @endIndex = 10
         else
-          $('#log').addClass('open')
+          @updateLog()
+          $('.git-gui-staging-area').addClass('fade-and-blur')
           $('#settings-action').removeClass('available')
-
-        $('.git-gui-staging-area').toggleClass('fade-and-blur')
-        pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
-        Git.Repository.open pathToRepo
-        .then (repo) ->
-          repo.getHeadCommit()
-          .then (commit) ->
-            history = commit.history Git.Revwalk.SORT.Time
-
-            text = ''
-            history.on 'commit', (commit) ->
-              text += 'commit ' + commit.sha() + '\n'
-              text += 'Author: ' + commit.author().name() + ' <' + commit.author().email() + '>' + '\n'
-              text += 'Date: ' + commit.date() + '\n'
-              text += '\n    ' + commit.message() + '\n'
-            history.on 'end', () ->
-              $('#log-text').text text
-
-            history.start()
-        .catch (error) ->
-          # TODO: Add the ability to set remote refs.
-          atom.notifications.addError "#{error}"
-          console.log error
+          $('#log').addClass('open')
 
       $('body').on 'click', '#settings-action', () ->
         if $('#settings').hasClass('open')
@@ -124,10 +109,8 @@ class GitGuiActionBarView extends View
       @updateCommitAction repo
       @updatePushAction repo
     .catch (error) ->
-      # TODO: Add the ability to set remote refs.
       atom.notifications.addError "#{error}"
       console.log error
-
 
   updateCommitAction: (repo) ->
     statusOptions = new Git.StatusOptions()
@@ -174,6 +157,38 @@ class GitGuiActionBarView extends View
                   $('#pull-action').addClass 'available'
                 else
                   $('#pull-action').removeClass 'available'
+    .catch (error) ->
+      atom.notifications.addError "#{error}"
+      console.log error
+
+  updateLog: () ->
+    pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
+    Git.Repository.open pathToRepo
+    .then (repo) =>
+      repo.getHeadCommit()
+      .then (commit) =>
+        history = commit.history Git.Revwalk.SORT.Time
+        promise = new Promise (resolve, reject) ->
+          history.on "end", resolve
+          history.on "error", reject
+        history.start()
+        promise.then (commits) =>
+          if @startIndex > commits.length
+            return
+          endIndex = if @endIndex > commits.length then commits.length else @endIndex
+          for i in [@startIndex...endIndex]
+            @startIndex += 1
+            @endIndex += 1
+            div = $('<div></div>')
+            commitDiv = $("<div>Commit #{commits[i].sha()}</div>")
+            authorDiv = $("<div>Author: #{commits[i].author().name()} &lt#{commits[i].author().email()}&gt</div>")
+            dateDiv = $("<div>Date: #{commits[i].date()}</div>")
+            messageDiv = $("<div>\n\t#{commits[i].message()}</div>")
+            div.append commitDiv
+            div.append authorDiv
+            div.append dateDiv
+            div.append messageDiv
+            $('#log').append div
     .catch (error) ->
       atom.notifications.addError "#{error}"
       console.log error

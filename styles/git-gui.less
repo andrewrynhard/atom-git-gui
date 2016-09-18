@@ -97,26 +97,19 @@ atom-workspace-axis.horizontal {
 
 .git-gui-log {
     position: absolute;
-    top: 80px;
-    left: 0;
     width: 100%;
+    height: 100%;
     -webkit-transition: opacity 0.15s ease;
     opacity: 0;
     z-index: 0;
-    height: 100%;
+    white-space: pre;
+    overflow-y: auto;
+    padding: 7px 7px 80px;
 }
 
 .git-gui-log.open {
     opacity: 1;
     z-index: 1;
-}
-
-#log-text {
-    height: 100%;
-    white-space: pre;
-    overflow-y: auto;
-    padding-left: 7px;
-    padding-right: 7px;
 }
 
 .git-gui-settings {
