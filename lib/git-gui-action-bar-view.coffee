@@ -85,8 +85,8 @@ class GitGuiActionBarView extends View
         Git.Repository.open pathToRepo
         .then (repo) ->
           repo.getHeadCommit()
-          .then (firstCommitOnMaster) ->
-            history = firstCommitOnMaster.history Git.Revwalk.SORT.Time
+          .then (commit) ->
+            history = commit.history Git.Revwalk.SORT.Time
 
             text = ''
             history.on 'commit', (commit) ->
