@@ -137,7 +137,7 @@ class GitGuiStagingAreaView extends View
     statusSpan = $("<span class='status icon'></span>")
     indexSpan = $("<span class='status status-added icon icon-check'></span>")
     fileSpan = $("<span id='staging-area-file' data-file='#{filePath}' data-staged='false' data-removed='false'>#{filePath}</span>")
-    removeSpan = $("<span class='icon icon-remove-close' id='staging-area-file-remove' data-file='#{filePath}'></span>")
+    removeSpan = $("<span class='icon icon-trashcan' id='staging-area-file-remove' data-file='#{filePath}'></span>")
     diffSpan = $("<span class='icon icon-diff' id='staging-area-file-diff' data-file='#{filePath}' data-staged='false'></span>")
 
     li.append statusSpan
