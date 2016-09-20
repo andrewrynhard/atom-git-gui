@@ -180,10 +180,10 @@ class GitGuiActionBarView extends View
             @startIndex += 1
             @endIndex += 1
             div = $('<div></div>')
-            commitDiv = $("<div>Commit #{commits[i].sha()}</div>")
+            commitDiv = $("<div>Commit: #{commits[i].sha()}</div>")
             authorDiv = $("<div>Author: #{commits[i].author().name()} &lt#{commits[i].author().email()}&gt</div>")
             dateDiv = $("<div>Date: #{commits[i].date()}</div>")
-            messageDiv = $("<div>\n\t#{commits[i].message()}</div>")
+            messageDiv = $("<div>\n\t#{commits[i].message()}\n\n</div>")
             div.append commitDiv
             div.append authorDiv
             div.append dateDiv
