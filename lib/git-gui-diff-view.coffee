@@ -21,7 +21,7 @@ class GitGuiDiffView extends View
         else
           $(e.target).addClass('staged')
           @selectedLines.push line
-        console.log @selectedLines.length
+
   serialize: ->
 
   destroy: ->
