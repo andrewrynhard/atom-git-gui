@@ -12,10 +12,16 @@ class GitGuiDiffView extends View
   initialize: ->
     $(document).ready () =>
       $('body').on 'click', '.git-gui-diff-view-hunk-line.status-added, .git-gui-diff-view-hunk-line.status-removed', (e) =>
-        $(e.target).addClass('staged')
         line = $(e.target).data 'line'
-        @selectedLines.push line
-
+        if $(e.target).hasClass('staged')
+          $(e.target).removeClass('staged')
+          index = @selectedLines.indexOf(line)
+          if index > - 1
+            @selectedLines.splice index, 1
+        else
+          $(e.target).addClass('staged')
+          @selectedLines.push line
+        console.log @selectedLines.length
   serialize: ->
 
   destroy: ->
