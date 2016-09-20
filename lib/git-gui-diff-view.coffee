@@ -37,11 +37,11 @@ class GitGuiDiffView extends View
       .then (repo) =>
         repo.stageLines(@filename, @selectedLines, false)
         .then () =>
+          @parentView.gitGuiStagingAreaView.updateStatus @filename
           atom.notifications.addInfo("Staged #{@selectedLines.length} hunks")
           @selectedLines.length = 0
         .catch (error) ->
           console.log error
-
 
   setDiffText: (filename, diff) ->
     @filename = filename
