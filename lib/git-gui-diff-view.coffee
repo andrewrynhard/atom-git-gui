@@ -1,12 +1,20 @@
 {$, View} = require 'space-pen'
+Git = require 'nodegit'
 
 class GitGuiDiffView extends View
+  selectedLines: []
+
   @content: ->
     @div class: 'git-gui-diff-view', =>
       @button class: 'btn', click: 'close', 'Close'
       @div id: 'diff-text'
 
   initialize: ->
+    $(document).ready () =>
+      $('body').on 'click', '.git-gui-diff-view-hunk-line.status-added, .git-gui-diff-view-hunk-line.status-removed', (e) =>
+        $(e.target).addClass('staged')
+        line = $(e.target).data 'line'
+        @selectedLines.push line
 
   serialize: ->
 
@@ -17,8 +25,20 @@ class GitGuiDiffView extends View
     $('.git-gui').removeClass 'expanded'
     $('.git-gui-overlay').removeClass 'fade-and-blur'
     $('.git-gui-diff-view').removeClass 'open'
+    if @selectedLines.length > 0
+      pathToRepo = $('#git-gui-project-list').find(':selected').data('repo')
+      Git.Repository.open pathToRepo
+      .then (repo) =>
+        repo.stageLines(@filename, @selectedLines, false)
+        .then () =>
+          atom.notifications.addInfo("Staged #{@selectedLines.length} hunks")
+          @selectedLines.length = 0
+        .catch (error) ->
+          console.log error
+
 
   setDiffText: (filename, diff) ->
+    @filename = filename
     $('#diff-text').empty()
     diff.patches()
     .then (patches) =>
@@ -48,13 +68,17 @@ class GitGuiDiffView extends View
           $(hunkLine).text hunkLineText
           if String.fromCharCode(line.origin()) == '+'
             $(hunkLine).addClass 'status status-added'
+            $(hunkLine).data 'line', line
           if String.fromCharCode(line.origin()) == '-'
             $(hunkLine).addClass 'status status-removed'
+            $(hunkLine).data 'line', line
           $(hunkDiv).append hunkLine
       .catch (error) ->
         return reject error
       .done () ->
         return resolve hunkDiv
     return promise
+
+  stageLine: () ->
 
 module.exports = GitGuiDiffView
