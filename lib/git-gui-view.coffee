@@ -25,10 +25,12 @@ class GitGuiView extends View
       @div class: 'git-gui-overlay', =>
         @subview 'gitGuiActionBarView', new GitGuiActionBarView()
         @div id: 'options', =>
-          @span class: 'icon icon-repo'
-          @select class: 'input-select', id: 'git-gui-project-list'
-          @span class: 'icon icon-git-branch'
-          @select class: 'input-select', id: 'git-gui-branch-list'
+          @div class: 'git-gui-option-item', =>
+            @span class: 'icon', id: 'repo'
+            @select class: 'input-select', id: 'git-gui-project-list'
+          @div class: 'git-gui-option-item', =>
+            @span class: 'icon', id: 'branch'
+            @select class: 'input-select', id: 'git-gui-branch-list'
         @div class: 'git-gui-log', id: 'log'
         @subview 'gitGuiStagingAreaView', new GitGuiStagingAreaView()
 

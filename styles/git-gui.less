@@ -91,8 +91,17 @@ atom-workspace-axis.horizontal {
     margin-left: auto;
 }
 
+.git-gui-option-item {
+    width: 50%;
+}
+
 #options {
     height: 30px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 4px;
 }
 
 .git-gui-log {
@@ -175,11 +184,11 @@ atom-workspace-axis.horizontal {
 }
 
 #git-gui-project-list {
-    width: 33%;
+    width: 80%;
 }
 
 #git-gui-branch-list {
-    width: 33%;
+    width: 80%;
 }
 
 #git-gui-remotes-list {
@@ -321,13 +330,13 @@ atom-workspace-axis.horizontal {
 
 #branch::before {
     font-family: "Octicons Regular";
-    padding-right: 14px;
+    font-size: 18px;
     content: "\f020";
 }
 
 #repo::before {
     font-family: "Octicons Regular";
-    padding-right: 14px;
+    font-size: 18px;
     content: "\f001";
 }
 
