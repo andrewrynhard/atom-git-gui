@@ -168,6 +168,8 @@ class GitGuiActionBarView extends View
     .then (repo) =>
       repo.getHeadCommit()
       .then (commit) =>
+        if commit == null
+          return
         history = commit.history Git.Revwalk.SORT.Time
         promise = new Promise (resolve, reject) ->
           history.on "end", resolve
