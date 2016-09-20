@@ -126,7 +126,8 @@ class GitGuiActionBarView extends View
                  Git.Status.STATUS.INDEX_MODIFIED, \
                  Git.Status.STATUS.INDEX_NEW + Git.Status.STATUS.INDEX_MODIFIED, \
                  Git.Status.STATUS.INDEX_DELETED, \
-                 Git.Status.STATUS.INDEX_RENAMED
+                 Git.Status.STATUS.INDEX_RENAMED, \
+                 Git.Status.STATUS.INDEX_MODIFIED + Git.Status.STATUS.WT_MODIFIED
               $('#commit-action').addClass 'available'
               return
     .catch (error) ->
