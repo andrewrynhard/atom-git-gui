@@ -22,9 +22,9 @@ class GitGuiDiffView extends View
     $('#diff-text').empty()
     diff.patches()
     .then (patches) =>
-      for patch in patches
-        if patch.newFile().path() != filename
-          continue
+      pathPatch = patches.filter (patch) ->
+        return patch.newFile().path() == filename
+      for patch in pathPatch
         patch.hunks()
         .then (hunks) =>
           for hunk in hunks
