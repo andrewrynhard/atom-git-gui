@@ -22,7 +22,7 @@ class GitGuiCommitView extends View
       pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
       msg = ''
       if @bodyEditor.model.isEmpty()
-        msg = @subjectEditor.getText() + '\n\n'
+        msg = @subjectEditor.getText()
       else
         msg = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText() + '\n'
       commitEditMsg = path.join pathToRepo, 'COMMIT_EDITMSG'
