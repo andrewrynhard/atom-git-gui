@@ -27,19 +27,25 @@ class GitGuiPushView extends View
           $('#git-gui-remotes-list').append $(option)
 
   pushPlainText: (remote, refSpec) ->
-    attempt = true
-    remote.push [refSpec],
-      callbacks:
-        certificateCheck: () ->
-          return 1
-        credentials: () =>
-          if attempt
-            attempt = false
-            return Git.Cred.userpassPlaintextNew @userName.getText(), @userPassword.getText()
-          else
-            return Git.Cred.defaultNew()
-        # transferProgress: (stats) ->
-        #   console.log stats
+    promise = new Promise (resolve, reject) ->
+      attempt = true
+      remote.push [refSpec],
+        callbacks:
+          certificateCheck: () ->
+            return 1
+          credentials: () =>
+            if attempt
+              attempt = false
+              return Git.Cred.userpassPlaintextNew @userName.getText(), @userPassword.getText()
+            else
+              return Git.Cred.defaultNew()
+          # transferProgress: (stats) ->
+          #   console.log stats
+      .catch (error) ->
+        reject error
+      .then () ->
+        resolve()
+    return promise
 
   pushSSH: (remote, refSpec) ->
     promise = new Promise (resolve, reject) ->
