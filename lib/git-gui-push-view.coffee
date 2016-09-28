@@ -1,4 +1,3 @@
-path = require 'path'
 {$, View} = require 'space-pen'
 Git = require 'nodegit'
 {TextEditorView} = require 'atom-space-pen-views'
