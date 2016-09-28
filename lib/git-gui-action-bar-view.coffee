@@ -56,9 +56,6 @@ class GitGuiActionBarView extends View
             detailedMessage: "This will overwrite changes to the remote."
             buttons:
               Ok: =>
-                $('atom-workspace-axis.horizontal').toggleClass 'blur'
-                $('#action-view').parent().show()
-                $('#action-view').addClass 'open'
                 @parentView.gitGuiActionView.openPushAction(true)
               Cancel: ->
                 return

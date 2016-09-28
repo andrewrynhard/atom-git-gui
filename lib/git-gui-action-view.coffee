@@ -72,8 +72,11 @@ class GitGuiActionView extends View
           else
             $('#action-view-action-button').text 'Push'
             $('#action-view-action-button').off 'click'
-            @openPlaintextPush remote, refSpec, ref.shorthand()
+            $('atom-workspace-axis.horizontal').toggleClass 'blur'
+            $('#action-view').parent().show()
+            $('#action-view').addClass 'open'
             @gitGuiPushView.show()
+            @openPlaintextPush remote, refSpec, ref.shorthand()
 
   openSSHPush: (remote, refSpec, refShorthand) ->
     $('.git-gui-staging-area').toggleClass('fade-and-blur')
@@ -89,12 +92,21 @@ class GitGuiActionView extends View
   openPlaintextPush: (remote, refSpec, refShorthand) ->
     $('#push-plaintext-options').css 'display', 'block'
     $('#action-view-action-button').on 'click', () =>
+      $('atom-workspace-axis.horizontal').removeClass 'blur'
+      $('#action-view').parent().hide()
+      $('#action-view').removeClass 'open'
+      $('#action-view-action-button').text ''
+      $('#action-view-action-button').off 'click'
+      @gitGuiPushView.hide()
+      $('.git-gui-staging-area').addClass('fade-and-blur')
       $('#action-progress-indicator').css 'visibility', 'visible'
       @gitGuiPushView.pushPlainText remote, refSpec
       .then () =>
         @showPushSuccess(remote.url(), refShorthand)
       .catch (error) =>
         @showPushError error
+      .then () ->
+        $('.git-gui-staging-area').toggleClass('fade-and-blur')
 
   showPushError: (error) ->
     $('#action-progress-indicator').css 'visibility', 'hidden'
@@ -106,7 +118,6 @@ class GitGuiActionView extends View
     $('#action-view-action-button').off 'click'
     $('#push-action').removeClass 'available'
     $('#action-progress-indicator').css 'visibility', 'hidden'
-    @gitGuiPushView.hide()
     @emitter.emit 'did-push'
     atom.notifications.addSuccess("Push successful:", {detail: "To #{url}\n\t#{refShorthand} -> #{refShorthand}" } )
 
