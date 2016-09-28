@@ -72,7 +72,7 @@ class GitGuiActionView extends View
           else
             $('#action-view-action-button').text 'Push'
             $('#action-view-action-button').off 'click'
-            $('atom-workspace-axis.horizontal').toggleClass 'blur'
+            $('atom-workspace-axis.horizontal').addClass 'blur'
             $('#action-view').parent().show()
             $('#action-view').addClass 'open'
             @gitGuiPushView.show()
@@ -87,7 +87,7 @@ class GitGuiActionView extends View
     .catch (error) =>
       @showPushError error
     .then () ->
-      $('.git-gui-staging-area').toggleClass('fade-and-blur')
+      $('.git-gui-staging-area').removeClass('fade-and-blur')
 
   openPlaintextPush: (remote, refSpec, refShorthand) ->
     $('#push-plaintext-options').css 'display', 'block'
@@ -106,7 +106,7 @@ class GitGuiActionView extends View
       .catch (error) =>
         @showPushError error
       .then () ->
-        $('.git-gui-staging-area').toggleClass('fade-and-blur')
+        $('.git-gui-staging-area').removeClass('fade-and-blur')
 
   showPushError: (error) ->
     $('#action-progress-indicator').css 'visibility', 'hidden'
