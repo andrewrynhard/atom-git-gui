@@ -42,18 +42,24 @@ class GitGuiPushView extends View
         #   console.log stats
 
   pushSSH: (remote, refSpec) ->
-    attempt = true
-    remote.push [refSpec],
-        callbacks:
-          certificateCheck: () ->
-            return 1
-          credentials: (url, userName) ->
-            if attempt
-              attempt = false
-              return Git.Cred.sshKeyFromAgent(userName)
-            else
-              return Git.Cred.defaultNew()
-          # transferProgress: (stats) ->
-          #   console.log stats
+    promise = new Promise (resolve, reject) ->
+      attempt = true
+      remote.push [refSpec],
+          callbacks:
+            certificateCheck: () ->
+              return 1
+            credentials: (url, userName) ->
+              if attempt
+                attempt = false
+                return Git.Cred.sshKeyFromAgent(userName)
+              else
+                return Git.Cred.defaultNew()
+            # transferProgress: (stats) ->
+            #   console.log stats
+      .catch (error) ->
+        reject error
+      .then () ->
+        resolve()
+    return promise
 
 module.exports = GitGuiPushView

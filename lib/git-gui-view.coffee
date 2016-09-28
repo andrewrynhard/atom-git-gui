@@ -23,6 +23,8 @@ class GitGuiView extends View
         @div class: 'git-gui-settings-content', =>
           @subview 'gitGuiConfigView', new GitGuiConfigView()
       @div class: 'git-gui-overlay', =>
+        @div class: 'action-progress', id: 'action-progress-indicator', =>
+          @span class: 'loading loading-spinner-small inline-block'
         @subview 'gitGuiActionBarView', new GitGuiActionBarView()
         @div id: 'options', =>
           @div class: 'git-gui-option-item', =>

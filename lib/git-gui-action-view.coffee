@@ -10,8 +10,6 @@ class GitGuiActionView extends View
     @div id: 'action-view', =>
       @subview 'gitGuiCommitView', new GitGuiCommitView()
       @subview 'gitGuiPushView', new GitGuiPushView()
-      @div class: 'action-progress', id: 'action-progress-indicator', =>
-        @span class: 'loading loading-spinner-small inline-block'
       @div class: 'btn-toolbar', id: 'action-view-btn-group', =>
         @div class: 'btn-group', =>
           @button class: 'btn', id: 'action-view-close-button', 'Close'
@@ -45,8 +43,6 @@ class GitGuiActionView extends View
     $('#action-view-action-button').off 'click'
     $('#action-view-action-button').on 'click', () =>
       @gitGuiCommitView.commit()
-      .catch (error) ->
-        atom.notifications.addError "Commit unsuccessful:", {description: error}
       .then (oid) =>
         $('#action-view-close-button').click()
         $('#action-view-action-button').empty()
@@ -55,10 +51,10 @@ class GitGuiActionView extends View
         @gitGuiCommitView.hide()
         @emitter.emit 'did-commit', oid
         atom.notifications.addSuccess "Commit successful:", {description: oid.tostrS() }
+      .catch (error) ->
+        atom.notifications.addError "Commit unsuccessful:", {description: error}
 
   openPushAction: (force) ->
-    $('#action-view-action-button').text 'Push'
-    $('#action-view-action-button').off 'click'
     pathToRepo = path.join $('#git-gui-project-list').val(), '.git'
     Git.Repository.open pathToRepo
     .then (repo) =>
@@ -74,28 +70,31 @@ class GitGuiActionView extends View
           if (url.indexOf("https") == - 1)
             @openSSHPush remote, refSpec, ref.shorthand()
           else
+            $('#action-view-action-button').text 'Push'
+            $('#action-view-action-button').off 'click'
             @openPlaintextPush remote, refSpec, ref.shorthand()
-          @gitGuiPushView.show()
+            @gitGuiPushView.show()
 
   openSSHPush: (remote, refSpec, refShorthand) ->
-    $('#push-plaintext-options').css 'display', 'none'
-    $('#action-view-action-button').on 'click', () =>
-      $('#action-progress-indicator').css 'visibility', 'visible'
-      @gitGuiPushView.pushSSH remote, refSpec
-      .catch (error) =>
-        @showPushError error
-      .then () =>
-        @showPushSuccess(remote.url(), refShorthand)
+    $('.git-gui-staging-area').toggleClass('fade-and-blur')
+    $('#action-progress-indicator').css 'visibility', 'visible'
+    @gitGuiPushView.pushSSH remote, refSpec
+    .then () =>
+      @showPushSuccess(remote.url(), refShorthand)
+    .catch (error) =>
+      @showPushError error
+    .then () ->
+      $('.git-gui-staging-area').toggleClass('fade-and-blur')
 
   openPlaintextPush: (remote, refSpec, refShorthand) ->
     $('#push-plaintext-options').css 'display', 'block'
     $('#action-view-action-button').on 'click', () =>
       $('#action-progress-indicator').css 'visibility', 'visible'
       @gitGuiPushView.pushPlainText remote, refSpec
-      .catch (error) =>
-        @showPushError error
       .then () =>
         @showPushSuccess(remote.url(), refShorthand)
+      .catch (error) =>
+        @showPushError error
 
   showPushError: (error) ->
     $('#action-progress-indicator').css 'visibility', 'hidden'

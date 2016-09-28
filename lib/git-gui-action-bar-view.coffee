@@ -63,9 +63,6 @@ class GitGuiActionBarView extends View
               Cancel: ->
                 return
         else
-          $('atom-workspace-axis.horizontal').toggleClass 'blur'
-          $('#action-view').parent().show()
-          $('#action-view').addClass 'open'
           @parentView.gitGuiActionView.openPushAction(false)
 
       $('body').on 'click', '#pull-action', () ->
