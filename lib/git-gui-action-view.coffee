@@ -21,8 +21,9 @@ class GitGuiActionView extends View
     @gitGuiPushView.hide()
     $(document).ready () ->
       $('body').on 'click', '#action-view-close-button', () ->
-        $('atom-workspace-axis.horizontal').toggleClass 'blur'
+        $('atom-workspace-axis.horizontal').removeClass 'blur'
         $('#action-view').parent().hide()
+        $('#action-view').removeClass 'open'
 
   serialize: ->
 
@@ -92,11 +93,7 @@ class GitGuiActionView extends View
   openPlaintextPush: (remote, refSpec, refShorthand) ->
     $('#push-plaintext-options').css 'display', 'block'
     $('#action-view-action-button').on 'click', () =>
-      $('atom-workspace-axis.horizontal').removeClass 'blur'
-      $('#action-view').parent().hide()
-      $('#action-view').removeClass 'open'
-      $('#action-view-action-button').text ''
-      $('#action-view-action-button').off 'click'
+      $('#action-view-close-button').click()
       @gitGuiPushView.hide()
       $('.git-gui-staging-area').addClass('fade-and-blur')
       $('#action-progress-indicator').css 'visibility', 'visible'
@@ -113,8 +110,8 @@ class GitGuiActionView extends View
     atom.notifications.addError "Push unsuccessful:", {description: error.toString() }
 
   showPushSuccess: (url, refShorthand) ->
-    $('#action-view-close-button').click()
     $('#action-view-action-button').empty()
+    $('#action-view-action-button').text ''
     $('#action-view-action-button').off 'click'
     $('#push-action').removeClass 'available'
     $('#action-progress-indicator').css 'visibility', 'hidden'
