@@ -170,9 +170,8 @@ class GitGuiStagingAreaView extends View
         $(fileSpan).data 'staged', true
         $(diffSpan).data 'staged', true
         statusSpan.addClass 'status-modified icon-diff-modified'
-        indexSpan.removeClass 'icon-check'
         indexSpan.removeClass 'status-added'
-        indexSpan.addClass 'status-modified icon-alert'
+        indexSpan.addClass 'status-modified'
         indexSpan.css 'opacity', 1
       when Git.Status.STATUS.INDEX_NEW + Git.Status.STATUS.WT_DELETED, Git.Status.STATUS.INDEX_MODIFIED + Git.Status.STATUS.WT_DELETED
         li.append diffSpan
@@ -180,9 +179,8 @@ class GitGuiStagingAreaView extends View
         $(fileSpan).data 'removed', true
         $(diffSpan).data 'staged', true
         statusSpan.addClass 'status-modified icon-diff-modified'
-        indexSpan.removeClass 'icon-check'
         indexSpan.removeClass 'status-added'
-        indexSpan.addClass 'status-removed icon-alert'
+        indexSpan.addClass 'status-removed'
         indexSpan.css 'opacity', 1
       when Git.Status.STATUS.INDEX_DELETED
         li.append removeSpan
