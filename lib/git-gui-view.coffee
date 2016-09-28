@@ -31,6 +31,9 @@ class GitGuiView extends View
           @div class: 'git-gui-option-item', =>
             @span class: 'icon', id: 'branch'
             @select class: 'input-select', id: 'git-gui-branch-list'
+          @div class: 'git-gui-option-item', =>
+            @span class: 'icon', id: 'remotes'
+            @select class: 'input-select', id: 'git-gui-remotes-list'
         @div class: 'git-gui-log', id: 'log'
         @subview 'gitGuiStagingAreaView', new GitGuiStagingAreaView()
 

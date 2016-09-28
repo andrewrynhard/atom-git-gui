@@ -10,9 +10,6 @@ class GitGuiPushView extends View
         @subview 'userName', new TextEditorView(mini: true)
         @h2 "Password"
         @subview 'userPassword', new TextEditorView(mini: true)
-      @div =>
-        @h2 "Remote"
-        @select class: 'input-select', id: 'git-gui-remotes-list'
 
   initialize: ->
 
