@@ -24,7 +24,7 @@ class GitGuiCommitView extends View
       if @bodyEditor.model.isEmpty()
         msg = @subjectEditor.getText()
       else
-        msg = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText() + '\n'
+        msg = @subjectEditor.getText() + '\n\n' + @bodyEditor.getText()
       commitEditMsg = path.join pathToRepo, 'COMMIT_EDITMSG'
       fs.writeFile commitEditMsg , msg, (err) =>
         if err then return reject err
